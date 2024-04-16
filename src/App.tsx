@@ -1,26 +1,29 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import * as React from "react";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  useOutlet,
+  Route,
+} from "react-router-dom";
+import { AuthProvider } from "./client/hooks/useAuth";
 
-function App() {
+interface IApp {}
+
+const AuthLayout = () => {
+  const outlet = useOutlet();
+  const user = window.localStorage.getItem("user");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          TEST
-        </a>
-      </header>
-    </div>
+    <>
+      <AuthProvider userData={user}>{outlet}</AuthProvider>
+    </>
   );
-}
+};
 
-export default App;
+export const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<AuthLayout />}>
+      <Route path="/:page?" element={<div>ROOT</div>} />
+    </Route>
+  )
+);
