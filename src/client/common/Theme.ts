@@ -5,14 +5,20 @@ export const leagueLinkTheme = createTheme({
     mode: "dark",
     primary: {
       light: "#7F9FBA",
-      main: "#5078A0",
-      dark: "#365E7F",
+      main: "#042538",
+      dark: "#5078A0",
       contrastText: "#FFFFFF",
     },
     secondary: {
       light: "#FFDBBB",
-      main: "#FABD7C",
+      main: "#FFC501",
       dark: "#D89B64",
+      contrastText: "#000000",
+    },
+    info: {
+      light: "#cfd0d2",
+      main: "#8d8e90",
+      dark: "#2b2c2e",
       contrastText: "#000000",
     },
     error: {

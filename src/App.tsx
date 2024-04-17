@@ -6,6 +6,8 @@ import {
   Route,
 } from "react-router-dom";
 import { AuthProvider } from "./client/hooks/useAuth";
+import { LeagueLink } from "./client/pages/LeagueLink/LeagueLink";
+import { Login } from "./client/pages/Login/Login";
 
 interface IApp {}
 
@@ -23,7 +25,8 @@ const AuthLayout = () => {
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthLayout />}>
-      <Route path="/:page?" element={<div>ROOT</div>} />
+      <Route path="/:page?" element={<LeagueLink />} />
+      <Route path="/auth/login" element={<Login />} />
     </Route>
   )
 );

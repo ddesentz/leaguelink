@@ -13,12 +13,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { AppSignals } from "./client/common/AppContext";
 import { rootSignals } from "./client/signals/RootSignals";
-import {
-  Route,
-  RouterProvider,
-  createBrowserRouter,
-  createRoutesFromElements,
-} from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import {
   browserLocalPersistence,
   getAuth,

@@ -8,8 +8,8 @@ export const AuthProvider = ({ children, userData }) => {
   const [currentUser, setCurrentUser] = useLocalStorage("user", userData);
   const navigate = useNavigate();
 
-  const login = async (data) => {
-    setCurrentUser(data);
+  const login = async (userData) => {
+    setCurrentUser(userData);
     navigate("/", { replace: true });
   };
 
