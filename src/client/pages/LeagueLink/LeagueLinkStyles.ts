@@ -6,7 +6,7 @@ export const leagueLinkStyles = makeStyles()((theme: Theme) => ({
     textAlign: "center",
     backgroundColor: theme.palette.background.paper,
     width: "100vw",
-    height: "100vh",
+    height: "100svh",
     overflow: "hidden",
     display: "flex",
   },

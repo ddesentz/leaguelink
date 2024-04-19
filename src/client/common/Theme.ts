@@ -6,7 +6,7 @@ export const leagueLinkTheme = createTheme({
     primary: {
       light: "#7F9FBA",
       main: "#042538",
-      dark: "#5078A0",
+      dark: "#27303E",
       contrastText: "#FFFFFF",
     },
     secondary: {
