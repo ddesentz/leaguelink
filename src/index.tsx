@@ -11,6 +11,7 @@ import { ThemeProvider } from "@mui/material";
 import { leagueLinkTheme } from "./client/common/Theme";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import { AppSignals } from "./client/common/AppContext";
 import { rootSignals } from "./client/signals/RootSignals";
 import { RouterProvider } from "react-router-dom";
@@ -44,6 +45,7 @@ connectFunctionsEmulator(functions, "127.0.0.1", 5001);
   await setPersistence(auth, browserLocalPersistence);
 })();
 export const db = getFirestore(app);
+export const storage = getStorage(app);
 
 root.render(
   <ThemeProvider theme={leagueLinkTheme}>

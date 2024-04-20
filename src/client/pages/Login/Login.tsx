@@ -23,8 +23,10 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../../..";
@@ -32,6 +34,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { leagueLinkTheme } from "../../common/Theme";
 import { LoadingFull } from "../../common/rive/LoadingFull";
+import { clear } from "console";
 
 interface ILogin {}
 
@@ -58,6 +61,11 @@ const LoginComponent: React.FunctionComponent<ILogin> = () => {
   React.useEffect(() => {
     if (user) {
       handleUserData();
+      const userRef = onSnapshot(doc(db, "users", user.uid), (userSnapshot) => {
+        login({ ...userSnapshot.data(), uid: user.uid });
+      });
+
+      return () => userRef();
     }
   }, [user]);
 
@@ -82,13 +90,13 @@ const LoginComponent: React.FunctionComponent<ILogin> = () => {
         photoUrl: user.photoURL,
         provider: provider,
       };
-      await getDoc(doc(db, "usernames", user.uid))
-        .then(async () => {
+      await getDoc(doc(db, "users", user.uid)).then(async (res) => {
+        if (res.exists()) {
+          await updateDoc(doc(db, "users", user.uid), userData);
+        } else {
           await setDoc(doc(db, "users", user.uid), userData);
-        })
-        .finally(() => {
-          login({ ...userData, uid: user.uid });
-        });
+        }
+      });
     }
   };
 
@@ -177,7 +185,7 @@ const LoginComponent: React.FunctionComponent<ILogin> = () => {
       await action(auth, email, password)
         .then(async (userCredential) => {
           const currentUser = userCredential.user;
-          updateProfile(currentUser, { displayName: displayName });
+          !isLogin && updateProfile(currentUser, { displayName: displayName });
         })
         .catch(async (error: any) => {
           const errorCode = error.code;
