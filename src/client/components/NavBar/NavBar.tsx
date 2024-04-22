@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import Icon from "@mdi/react";
-import { mdiBell, mdiLogout, mdiMenu, mdiSlashForward } from "@mdi/js";
+import { mdiBell, mdiLogout, mdiSlashForward } from "@mdi/js";
 import { getAuth, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate, useParams } from "react-router-dom";
@@ -112,11 +112,7 @@ const NavBarComponent: React.FunctionComponent<INavBar> = () => {
               <Icon path={mdiBell} className={classes.notificationIcon} />
             </Badge>
           </IconButton>
-          {params.league ? (
-            <IconButton disableFocusRipple disableRipple>
-              <Icon path={mdiMenu} className={classes.menuIcon} />
-            </IconButton>
-          ) : (
+          {!params.league && (
             <>
               <IconButton
                 disableFocusRipple

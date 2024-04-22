@@ -39,13 +39,28 @@ export const leagueListStyles = makeStyles()((theme: Theme) => ({
   },
   leagueImg: {
     width: "100%",
-    maxHeight: "40svh",
-    objectFit: "contain",
+    aspectRatio: "3/1",
+    objectFit: "fill",
     borderRadius: theme.spacing(4),
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     borderBottom: `2px solid ${theme.palette.primary.contrastText}`,
     backgroundColor: theme.palette.background.default,
+  },
+  leagueImgSkeleton: {
+    width: "100%",
+    objectFit: "fill",
+    borderRadius: theme.spacing(4),
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderBottom: `2px solid ${theme.palette.primary.contrastText}`,
+    backgroundColor: theme.palette.background.default,
+    [theme.breakpoints.up(310 * 4)]: {
+      height: `calc((100svw - ${theme.spacing(40)}) / 3)`,
+    },
+    [theme.breakpoints.down(310 * 4)]: {
+      height: `calc((100svw - ${theme.spacing(16)}) / 3)`,
+    },
   },
   leagueText: {
     color: theme.palette.info.light,

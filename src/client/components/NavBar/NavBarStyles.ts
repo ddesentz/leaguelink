@@ -105,7 +105,7 @@ export const navBarStyles = makeStyles()((theme: Theme) => ({
   },
   breadCrumbIcon: {
     width: theme.spacing(8),
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.info.light + "AA",
   },
   leagueText: {
     fontSize: theme.spacing(6),

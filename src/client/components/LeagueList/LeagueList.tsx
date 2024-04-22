@@ -62,8 +62,7 @@ const LeagueCard: React.FunctionComponent<ILeagueCard> = ({ league }) => {
         <Skeleton
           variant="rectangular"
           width={"100%"}
-          height={"20svh"}
-          className={classes.leagueImg}
+          className={classes.leagueImgSkeleton}
         />
       )}
       <Grid

@@ -10,4 +10,53 @@ export const leagueStyles = makeStyles()((theme: Theme) => ({
     overflow: "hidden",
     display: "flex",
   },
+  contentContainer: {
+    marginTop: theme.spacing(16),
+    overflow: "auto",
+    [theme.breakpoints.up(310 * 4)]: {
+      padding: theme.spacing(20),
+      paddingTop: theme.spacing(16),
+    },
+    [theme.breakpoints.down(310 * 4)]: {
+      padding: theme.spacing(6),
+      paddingTop: theme.spacing(8),
+    },
+  },
+  defaultHeaderText: {
+    color: theme.palette.primary.light,
+    fontWeight: "bold",
+    [theme.breakpoints.up(310 * 4)]: {
+      fontSize: theme.spacing(8),
+    },
+    [theme.breakpoints.down(310 * 4)]: {
+      fontSize: theme.spacing(6),
+    },
+  },
+  defaultDescriptionText: {
+    color: theme.palette.info.light,
+    marginTop: theme.spacing(4),
+    display: "flex",
+    [theme.breakpoints.up(310 * 4)]: {
+      fontSize: theme.spacing(6),
+    },
+    [theme.breakpoints.down(310 * 4)]: {
+      fontSize: theme.spacing(4),
+    },
+  },
+  actionText: {
+    color: theme.palette.info.light,
+    display: "flex",
+    alignItems: "center",
+    [theme.breakpoints.up(310 * 4)]: {
+      fontSize: theme.spacing(6),
+    },
+    [theme.breakpoints.down(310 * 4)]: {
+      fontSize: theme.spacing(4),
+    },
+  },
+  menuIcon: {
+    width: theme.spacing(8),
+    color: theme.palette.info.light,
+    marginLeft: theme.spacing(2),
+  },
 }));

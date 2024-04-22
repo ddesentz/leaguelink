@@ -67,6 +67,7 @@ export const router = createBrowserRouter(
     <Route element={<AuthLayout />}>
       <Route path="/" element={<LeagueLink />} />
       <Route path="/:league/:page?" element={<League />} />
+      <Route path="/:league/user/:userId?" element={<League />} />
       <Route path="/auth/login" element={<Login />} />
     </Route>
   )
