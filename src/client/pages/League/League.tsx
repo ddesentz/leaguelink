@@ -1,9 +1,8 @@
 import * as React from "react";
 import { leagueStyles } from "./LeagueStyles";
 import { useParams } from "react-router-dom";
-import { NavBar } from "../../components/NavBar/NavBar";
+import { AppHeader } from "../../components/AppHeader/AppHeader";
 import { Grid } from "@mui/material";
-import { getLocalStorage } from "../../hooks/useLocalStorage";
 import { LeagueNav } from "../../components/LeagueNav/LeagueNav";
 import { LeagueHome } from "../../components/League/Home/LeagueHome";
 import { LeagueExplore } from "../../components/League/Explore/LeagueExplore";
@@ -22,19 +21,12 @@ interface ILeague {}
 const LeagueComponent: React.FunctionComponent<ILeague> = () => {
   const { classes } = leagueStyles();
   const params = useParams();
-  const league = getLocalStorage("selectedLeague");
 
   return (
     <div className={classes.leagueContainer}>
-      <NavBar />
+      <AppHeader />
       <LeagueNav />
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justifyContent="space-around"
-        className={classes.contentContainer}
-      >
+      <Grid container direction="column" className={classes.contentContainer}>
         {params.userId ? <LeagueUser /> : PageSelect.get(params.page)}
       </Grid>
     </div>

@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { LoadingFull } from "../../common/rive/LoadingFull";
-import { NavBar } from "../../components/NavBar/NavBar";
+import { AppHeader } from "../../components/AppHeader/AppHeader";
 import { LeagueList } from "../../components/LeagueList/LeagueList";
 
 interface ILeagueLink {}
@@ -32,7 +32,7 @@ const LeagueLinkComponent: React.FunctionComponent<ILeagueLink> = () => {
 
   return (
     <div className={classes.leagueLinkContainer}>
-      <NavBar />
+      <AppHeader />
       <LeagueList />
     </div>
   );

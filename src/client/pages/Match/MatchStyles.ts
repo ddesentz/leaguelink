@@ -1,8 +1,8 @@
 import { Theme } from "@mui/material";
 import { makeStyles } from "tss-react/mui";
 
-export const leagueStyles = makeStyles()((theme: Theme) => ({
-  leagueContainer: {
+export const matchStyles = makeStyles()((theme: Theme) => ({
+  matchContainer: {
     textAlign: "center",
     backgroundColor: theme.palette.background.default,
     width: "100vw",

@@ -10,7 +10,12 @@ import { router } from "./App";
 import { ThemeProvider } from "@mui/material";
 import { leagueLinkTheme } from "./client/common/Theme";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { AppSignals } from "./client/common/AppContext";
 import { rootSignals } from "./client/signals/RootSignals";
@@ -21,6 +26,7 @@ import {
   setPersistence,
 } from "firebase/auth";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import "@preact/signals-react/auto";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAMMhQk4BBYR-xiQYwwz3xTlWz6bqA62vw",
@@ -44,6 +50,12 @@ connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 (async () => {
   await setPersistence(auth, browserLocalPersistence);
 })();
+
+initializeFirestore(app, {
+  localCache: persistentLocalCache(
+    /*settings*/ { tabManager: persistentMultipleTabManager() }
+  ),
+});
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 

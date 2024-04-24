@@ -1,27 +1,16 @@
 import * as React from "react";
 import { leagueNavStyles } from "./LeagueNavStyles";
-import {
-  AppBar,
-  Avatar,
-  Grid,
-  IconButton,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { AppBar, Avatar, Grid, IconButton, Toolbar } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import Icon from "@mdi/react";
-import {
-  mdiCalendar,
-  mdiChevronLeft,
-  mdiHome,
-  mdiMagnify,
-  mdiScoreboard,
-} from "@mdi/js";
 import { getLocalStorage } from "../../hooks/useLocalStorage";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { leagueLinkTheme } from "../../common/Theme";
+import HomeIcon from "../../assets/navIcons/Home.svg";
+import ExploreIcon from "../../assets/navIcons/Explore.svg";
+import ScoresIcon from "../../assets/navIcons/Scores.svg";
+import StandingsIcon from "../../assets/navIcons/Standings.svg";
+import ScheduleIcon from "../../assets/navIcons/Schedule.svg";
+import { ReactSVG } from "react-svg";
 
 interface ILeagueNav {}
 
@@ -60,7 +49,7 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
             }
             className={classes.navButton}
           >
-            <Icon path={mdiHome} className={classes.backIcon} />
+            <ReactSVG src={HomeIcon} className={classes.navIcon} />
           </IconButton>
           <IconButton
             disableFocusRipple
@@ -69,7 +58,7 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
             aria-selected={params.page === "explore" ? true : false}
             className={classes.navButton}
           >
-            <Icon path={mdiMagnify} className={classes.backIcon} />
+            <ReactSVG src={ExploreIcon} className={classes.navIcon} />
           </IconButton>
           <IconButton
             disableFocusRipple
@@ -78,7 +67,16 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
             aria-selected={params.page === "scores" ? true : false}
             className={classes.navButton}
           >
-            <Icon path={mdiScoreboard} className={classes.backIcon} />
+            <ReactSVG src={ScoresIcon} className={classes.navIcon} />
+          </IconButton>
+          <IconButton
+            disableFocusRipple
+            disableRipple
+            onClick={() => handleNavigate("standings")}
+            aria-selected={params.page === "standings" ? true : false}
+            className={classes.navButton}
+          >
+            <ReactSVG src={StandingsIcon} className={classes.navIcon} />
           </IconButton>
           <IconButton
             disableFocusRipple
@@ -87,7 +85,7 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
             aria-selected={params.page === "schedule" ? true : false}
             className={classes.navButton}
           >
-            <Icon path={mdiCalendar} className={classes.backIcon} />
+            <ReactSVG src={ScheduleIcon} className={classes.navIcon} />
           </IconButton>
           <IconButton
             disableFocusRipple

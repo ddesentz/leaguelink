@@ -34,10 +34,8 @@ import { useAuth } from "../../hooks/useAuth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { leagueLinkTheme } from "../../common/Theme";
 import { LoadingFull } from "../../common/rive/LoadingFull";
-import { clear } from "console";
 
 interface ILogin {}
-
 const LoginComponent: React.FunctionComponent<ILogin> = () => {
   const { classes } = loginStyles();
   const { login } = useAuth();
@@ -227,6 +225,7 @@ const LoginComponent: React.FunctionComponent<ILogin> = () => {
         <div className={classes.logoContainer}>
           <img
             src="/assets/LeagueLink_Logo_v1.png"
+            alt=""
             className={classes.shieldLogo}
           />
         </div>

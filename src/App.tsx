@@ -11,6 +11,7 @@ import { Login } from "./client/pages/Login/Login";
 import { GlobalStyles } from "tss-react";
 import { useStyles } from "tss-react/mui";
 import { League } from "./client/pages/League/League";
+import { Match } from "./client/pages/Match/Match";
 
 const AuthLayout = () => {
   const outlet = useOutlet();
@@ -39,6 +40,9 @@ const AuthLayout = () => {
             "*::-webkit-scrollbar-corner": {
               backgroundColor: theme.palette.background.default,
             },
+            ".ReactVirtualized__Grid__innerScrollContainer": {
+              display: "flex",
+            },
             "@keyframes panWeb": {
               "0%": {
                 backgroundPosition: "0% 0%",
@@ -66,8 +70,9 @@ export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthLayout />}>
       <Route path="/" element={<LeagueLink />} />
-      <Route path="/:league/:page?" element={<League />} />
-      <Route path="/:league/user/:userId?" element={<League />} />
+      <Route path="/:leagueId/:page?" element={<League />} />
+      <Route path="/:leagueId/user/:userId?" element={<League />} />
+      <Route path="/:leagueId/:page/:matchId" element={<Match />} />
       <Route path="/auth/login" element={<Login />} />
     </Route>
   )

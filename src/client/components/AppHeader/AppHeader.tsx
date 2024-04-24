@@ -1,5 +1,5 @@
 import * as React from "react";
-import { navBarStyles } from "./NavBarStyles";
+import { appHeaderStyles } from "./AppHeaderStyles";
 import {
   AppBar,
   Avatar,
@@ -13,16 +13,22 @@ import {
   Typography,
 } from "@mui/material";
 import Icon from "@mdi/react";
-import { mdiBell, mdiLogout, mdiSlashForward } from "@mdi/js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mdiLogout, mdiSlashForward } from "@mdi/js";
 import { getAuth, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate, useParams } from "react-router-dom";
 import { getLocalStorage } from "../../hooks/useLocalStorage";
+import {
+  faCommentDots,
+  faGear,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
-interface INavBar {}
+interface IAppHeader {}
 
-const NavBarComponent: React.FunctionComponent<INavBar> = () => {
-  const { classes } = navBarStyles();
+const AppHeaderComponent: React.FunctionComponent<IAppHeader> = () => {
+  const { classes } = appHeaderStyles();
   const params = useParams();
   const navigate = useNavigate();
   const auth = getAuth();
@@ -47,6 +53,17 @@ const NavBarComponent: React.FunctionComponent<INavBar> = () => {
   const handleSignOut = () => {
     handleMenuClose();
     signOut(auth);
+  };
+
+  const getActionBadgeCount = () => {
+    if (!params.page && !params.userId) return 22;
+    return 0;
+  };
+
+  const getActionIcon = () => {
+    if (!params.page && !params.userId) return faCommentDots;
+    if (!params.page) return faGear;
+    return faPlus;
   };
 
   const UserMenu = () => (
@@ -79,19 +96,20 @@ const NavBarComponent: React.FunctionComponent<INavBar> = () => {
   );
 
   return (
-    <AppBar className={classes.navBarContainer}>
+    <AppBar className={classes.appHeaderContainer}>
       <Toolbar>
         <div className={classes.logoContainer}>
           <img
             src={
-              params.league
+              params.leagueId
                 ? "/assets/LeagueLink_Shield_v1.svg"
                 : "/assets/LeagueLink_Logo_v1.svg"
             }
+            alt=""
             onClick={() => navigate(`/`)}
             className={classes.logo}
           />
-          {params.league && leagueData && (
+          {params.leagueId && leagueData && (
             <>
               <Icon path={mdiSlashForward} className={classes.breadCrumbIcon} />
               <Typography className={classes.leagueText}>
@@ -100,6 +118,7 @@ const NavBarComponent: React.FunctionComponent<INavBar> = () => {
             </>
           )}
         </div>
+
         <Grid
           container
           direction="row"
@@ -107,12 +126,21 @@ const NavBarComponent: React.FunctionComponent<INavBar> = () => {
           justifyContent="flex-end"
           className={classes.actionContainer}
         >
-          <IconButton disableFocusRipple disableRipple>
-            <Badge badgeContent={22} className={classes.notificaitonBadge}>
-              <Icon path={mdiBell} className={classes.notificationIcon} />
-            </Badge>
-          </IconButton>
-          {!params.league && (
+          {params.page !== "explore" && (
+            <IconButton disableFocusRipple disableRipple>
+              <Badge
+                badgeContent={getActionBadgeCount()}
+                className={classes.notificaitonBadge}
+              >
+                <FontAwesomeIcon
+                  icon={getActionIcon()}
+                  className={classes.notificationIcon}
+                />
+              </Badge>
+            </IconButton>
+          )}
+
+          {!params.leagueId && (
             <>
               <IconButton
                 disableFocusRipple
@@ -134,4 +162,4 @@ const NavBarComponent: React.FunctionComponent<INavBar> = () => {
   );
 };
 
-export const NavBar = NavBarComponent;
+export const AppHeader = AppHeaderComponent;

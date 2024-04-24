@@ -1,8 +1,8 @@
 import { Theme } from "@mui/material";
 import { makeStyles } from "tss-react/mui";
 
-export const navBarStyles = makeStyles()((theme: Theme) => ({
-  navBarContainer: {
+export const appHeaderStyles = makeStyles()((theme: Theme) => ({
+  appHeaderContainer: {
     backgroundColor: theme.palette.background.default,
     color: theme.palette.primary.contrastText,
     backgroundImage: `linear-gradient(${theme.palette.secondary.contrastText}11, ${theme.palette.primary.dark}cc)`,

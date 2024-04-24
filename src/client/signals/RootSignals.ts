@@ -1,10 +1,11 @@
-import { signal } from "@preact/signals-react";
+import { createMatchSignals } from "./MatchSignals";
 
 const createRootSignals = () => {
   return {};
 };
 
 export const rootSignals = {
+  matchSignals: createMatchSignals(),
   rootSignals: createRootSignals(),
 };
 

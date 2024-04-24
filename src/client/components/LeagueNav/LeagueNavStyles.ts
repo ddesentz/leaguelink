@@ -8,14 +8,14 @@ export const leagueNavStyles = makeStyles()((theme: Theme) => ({
     [theme.breakpoints.up(310 * 4)]: {
       height: "100%",
       width: theme.spacing(16),
-      zIndex: 2,
+      zIndex: 100,
       left: 0,
       backgroundImage: `linear-gradient(270deg, ${theme.palette.primary.dark}cc, ${theme.palette.secondary.contrastText}11)`,
     },
     [theme.breakpoints.down(310 * 4)]: {
       top: "auto",
       bottom: 0,
-      backgroundImage: `linear-gradient(0deg, ${theme.palette.primary.dark}cc, ${theme.palette.secondary.contrastText}11)`,
+      backgroundImage: `linear-gradient(180deg, ${theme.palette.primary.dark}cc, ${theme.palette.secondary.contrastText}11)`,
     },
   },
   toolbarContainer: {
@@ -40,35 +40,35 @@ export const leagueNavStyles = makeStyles()((theme: Theme) => ({
     },
   },
   navButton: {
-    width: theme.spacing(16),
     [theme.breakpoints.up(310 * 4)]: {
       width: "100%",
     },
+    [theme.breakpoints.down(310 * 4)]: {
+      width: theme.spacing(12),
+    },
     "&[aria-selected=true]": {
-      "& > svg": {
-        color: theme.palette.primary.light,
+      "& > div > div > svg": {
+        fill: `${theme.palette.primary.light} !important`,
       },
     },
   },
   avatarButton: {
-    width: theme.spacing(16),
     [theme.breakpoints.up(310 * 4)]: {
       width: "100%",
     },
+    [theme.breakpoints.down(310 * 4)]: {
+      width: theme.spacing(12),
+    },
     "&[aria-selected=true]": {
-      "& > div": {
-        [theme.breakpoints.up(310 * 4)]: {
-          border: `2px solid ${theme.palette.info.light}`,
-        },
-        [theme.breakpoints.down(310 * 4)]: {
-          border: `1px solid ${theme.palette.info.light}`,
-        },
+      "& > div ": {
+        border: `2px solid ${theme.palette.primary.light}`,
       },
     },
   },
-  backIcon: {
+  navIcon: {
     width: theme.spacing(8),
-    color: theme.palette.info.light,
+    height: theme.spacing(8),
+    fill: theme.palette.info.light,
   },
   headerText: {
     fontSize: theme.spacing(6),
