@@ -1,6 +1,13 @@
 import * as React from "react";
 import { leagueNavStyles } from "./LeagueNavStyles";
-import { AppBar, Avatar, Grid, IconButton, Toolbar } from "@mui/material";
+import {
+  AppBar,
+  Avatar,
+  Grid,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { getLocalStorage } from "../../hooks/useLocalStorage";
 import { getAuth } from "firebase/auth";
@@ -50,6 +57,7 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
             className={classes.navButton}
           >
             <ReactSVG src={HomeIcon} className={classes.navIcon} />
+            <Typography className={classes.navButtonLabel}>Home</Typography>
           </IconButton>
           <IconButton
             disableFocusRipple
@@ -59,6 +67,7 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
             className={classes.navButton}
           >
             <ReactSVG src={ExploreIcon} className={classes.navIcon} />
+            <Typography className={classes.navButtonLabel}>Explore</Typography>
           </IconButton>
           <IconButton
             disableFocusRipple
@@ -68,6 +77,7 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
             className={classes.navButton}
           >
             <ReactSVG src={ScoresIcon} className={classes.navIcon} />
+            <Typography className={classes.navButtonLabel}>Scores</Typography>
           </IconButton>
           <IconButton
             disableFocusRipple
@@ -77,6 +87,9 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
             className={classes.navButton}
           >
             <ReactSVG src={StandingsIcon} className={classes.navIcon} />
+            <Typography className={classes.navButtonLabel}>
+              Standings
+            </Typography>
           </IconButton>
           <IconButton
             disableFocusRipple
@@ -86,6 +99,7 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
             className={classes.navButton}
           >
             <ReactSVG src={ScheduleIcon} className={classes.navIcon} />
+            <Typography className={classes.navButtonLabel}>Schedule</Typography>
           </IconButton>
           <IconButton
             disableFocusRipple
@@ -99,6 +113,7 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
               src={user.photoURL || ""}
               className={classes.userIcon}
             />
+            <Typography className={classes.navButtonLabel}>Profile</Typography>
           </IconButton>
         </Grid>
       </Toolbar>

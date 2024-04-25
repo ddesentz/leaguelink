@@ -15,44 +15,25 @@ export const matchStyles = makeStyles()((theme: Theme) => ({
     width: "100%",
     overflow: "auto",
     [theme.breakpoints.up(310 * 4)]: {
-      marginLeft: theme.spacing(16),
+      marginLeft: theme.spacing(39),
     },
   },
-  defaultHeaderText: {
-    color: theme.palette.primary.light,
-    fontWeight: "bold",
-    [theme.breakpoints.up(310 * 4)]: {
-      fontSize: theme.spacing(8),
-    },
-    [theme.breakpoints.down(310 * 4)]: {
-      fontSize: theme.spacing(6),
-    },
+  matchContent: {
+    marginTop: theme.spacing(16),
   },
-  defaultDescriptionText: {
-    color: theme.palette.info.light,
-    marginTop: theme.spacing(4),
-    display: "flex",
-    [theme.breakpoints.up(310 * 4)]: {
-      fontSize: theme.spacing(6),
-    },
-    [theme.breakpoints.down(310 * 4)]: {
-      fontSize: theme.spacing(4),
-    },
+  tabs: {
+    width: "100%",
+    backgroundColor: theme.palette.background.paper,
   },
-  actionText: {
-    color: theme.palette.info.light,
-    display: "flex",
-    alignItems: "center",
-    [theme.breakpoints.up(310 * 4)]: {
-      fontSize: theme.spacing(6),
-    },
-    [theme.breakpoints.down(310 * 4)]: {
-      fontSize: theme.spacing(4),
-    },
+  tabIndicator: {
+    backgroundColor: theme.palette.primary.light,
   },
-  menuIcon: {
-    width: theme.spacing(8),
-    color: theme.palette.info.light,
-    marginLeft: theme.spacing(2),
+  tab: {
+    width: "50%",
+    maxWidth: "unset",
+    color: theme.palette.primary.contrastText + "AA",
+    "&.Mui-selected": {
+      color: theme.palette.primary.contrastText,
+    },
   },
 }));

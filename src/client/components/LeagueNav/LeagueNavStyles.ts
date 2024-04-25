@@ -7,7 +7,7 @@ export const leagueNavStyles = makeStyles()((theme: Theme) => ({
     color: theme.palette.primary.contrastText,
     [theme.breakpoints.up(310 * 4)]: {
       height: "100%",
-      width: theme.spacing(16),
+      width: theme.spacing(39),
       zIndex: 100,
       left: 0,
       backgroundImage: `linear-gradient(270deg, ${theme.palette.primary.dark}cc, ${theme.palette.secondary.contrastText}11)`,
@@ -33,41 +33,71 @@ export const leagueNavStyles = makeStyles()((theme: Theme) => ({
       zIndex: 2,
       left: 0,
       paddingTop: theme.spacing(20),
-      gap: theme.spacing(4),
+
+      gap: theme.spacing(5),
     },
     [theme.breakpoints.down(310 * 4)]: {
       height: theme.spacing(16),
     },
   },
   navButton: {
+    display: "flex",
     [theme.breakpoints.up(310 * 4)]: {
       width: "100%",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      paddingLeft: theme.spacing(5.2),
+      gap: theme.spacing(3),
     },
     [theme.breakpoints.down(310 * 4)]: {
       width: theme.spacing(12),
+      flexDirection: "column",
+      gap: theme.spacing(1),
     },
     "&[aria-selected=true]": {
       "& > div > div > svg": {
         fill: `${theme.palette.primary.light} !important`,
       },
+      "& > p": {
+        color: theme.palette.primary.light,
+      },
+    },
+  },
+  navButtonLabel: {
+    color: theme.palette.info.light,
+    [theme.breakpoints.up(310 * 4)]: {
+      fontSize: theme.spacing(3.5),
+    },
+    [theme.breakpoints.down(310 * 4)]: {
+      fontSize: theme.spacing(2.5),
     },
   },
   avatarButton: {
+    display: "flex",
+    gap: theme.spacing(2),
     [theme.breakpoints.up(310 * 4)]: {
       width: "100%",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      gap: theme.spacing(3),
+      paddingLeft: theme.spacing(5.2),
     },
     [theme.breakpoints.down(310 * 4)]: {
       width: theme.spacing(12),
+      flexDirection: "column",
+      gap: theme.spacing(1),
     },
     "&[aria-selected=true]": {
-      "& > div ": {
-        border: `2px solid ${theme.palette.primary.light}`,
+      "& > p ": {
+        color: theme.palette.primary.light,
       },
     },
   },
   navIcon: {
-    width: theme.spacing(8),
-    height: theme.spacing(8),
+    width: theme.spacing(6),
+    height: theme.spacing(6),
     fill: theme.palette.info.light,
   },
   headerText: {
@@ -89,8 +119,8 @@ export const leagueNavStyles = makeStyles()((theme: Theme) => ({
     },
   },
   userIcon: {
-    width: theme.spacing(8),
-    height: theme.spacing(8),
+    width: theme.spacing(6),
+    height: theme.spacing(6),
   },
   userDisplayName: {
     fontSize: theme.spacing(6),

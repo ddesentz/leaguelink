@@ -7,6 +7,7 @@ import { LeagueNav } from "../../components/LeagueNav/LeagueNav";
 import { LeagueHome } from "../../components/League/Home/LeagueHome";
 import { LeagueExplore } from "../../components/League/Explore/LeagueExplore";
 import { LeagueScores } from "../../components/League/Scores/LeagueScores";
+import { LeagueStandings } from "../../components/League/Standings/LeagueStandings";
 import { LeagueSchedule } from "../../components/League/Schedule/LeagueSchedule";
 import { LeagueUser } from "../../components/League/User/LeagueUser";
 
@@ -14,6 +15,7 @@ const PageSelect: Map<string | undefined, any> = new Map([
   [undefined, <LeagueHome />],
   ["explore", <LeagueExplore />],
   ["scores", <LeagueScores />],
+  ["standings", <LeagueStandings />],
   ["schedule", <LeagueSchedule />],
 ]);
 

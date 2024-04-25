@@ -1,12 +1,20 @@
 import * as React from "react";
 import { matchHeaderStyles } from "./MatchHeaderStyles";
-import { AppBar, Grid, IconButton, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Grid,
+  IconButton,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useNavigate } from "react-router";
 import { getLocalStorage } from "../../../../hooks/useLocalStorage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faBell as faBellOutline } from "@fortawesome/free-regular-svg-icons";
 import { useAppSignals } from "../../../../common/AppContext";
+import { leagueLinkTheme } from "../../../../common/Theme";
 
 interface IMatchHeader {}
 
@@ -15,6 +23,7 @@ const MatchHeaderComponent: React.FunctionComponent<IMatchHeader> = () => {
   const navigate = useNavigate();
   const { matchSignals } = useAppSignals();
   const league = getLocalStorage("selectedLeague");
+  const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
   const [notify, setNotify] = React.useState(false);
 
   const handleBack = () => {
@@ -23,19 +32,24 @@ const MatchHeaderComponent: React.FunctionComponent<IMatchHeader> = () => {
   return (
     <AppBar className={classes.appBarContainer}>
       <Toolbar className={classes.toolbarContainer}>
+        <img
+          src={
+            isMobile
+              ? "/assets/LeagueLink_Shield_v1.svg"
+              : "/assets/LeagueLink_Logo_v1.svg"
+          }
+          alt=""
+          onClick={() => navigate(`/`)}
+          className={classes.logo}
+        />
         <Grid
           container
           direction="row"
           alignItems="center"
           justifyContent="space-between"
+          className={classes.matchContentHeader}
         >
           <Grid item className={classes.leftItems}>
-            <img
-              src={"/assets/LeagueLink_Shield_v1.svg"}
-              alt=""
-              onClick={() => navigate(`/`)}
-              className={classes.logo}
-            />
             <IconButton
               disableFocusRipple
               disableRipple

@@ -11,6 +11,7 @@ import {
   MenuItem,
   Toolbar,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import Icon from "@mdi/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,6 +25,7 @@ import {
   faGear,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { leagueLinkTheme } from "../../common/Theme";
 
 interface IAppHeader {}
 
@@ -35,6 +37,7 @@ const AppHeaderComponent: React.FunctionComponent<IAppHeader> = () => {
   const [user] = useAuthState(auth);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const leagueData = getLocalStorage("selectedLeague");
+  const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -101,7 +104,7 @@ const AppHeaderComponent: React.FunctionComponent<IAppHeader> = () => {
         <div className={classes.logoContainer}>
           <img
             src={
-              params.leagueId
+              params.leagueId && isMobile
                 ? "/assets/LeagueLink_Shield_v1.svg"
                 : "/assets/LeagueLink_Logo_v1.svg"
             }

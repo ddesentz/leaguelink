@@ -10,6 +10,7 @@ export const matchHeaderStyles = makeStyles()((theme: Theme) => ({
   leftItems: {
     display: "flex",
     alignItems: "center",
+    height: theme.spacing(16),
   },
   logo: {
     height: theme.spacing(12),
@@ -25,9 +26,18 @@ export const matchHeaderStyles = makeStyles()((theme: Theme) => ({
     },
   },
   toolbarContainer: {
+    justifyContent: "space-between",
     [theme.breakpoints.up(310 * 4)]: {
       width: "100%",
       padding: "0 !important",
+    },
+  },
+  matchContentHeader: {
+    [theme.breakpoints.up(310 * 4)]: {
+      width: `calc(100% - ${theme.spacing(39)})`,
+    },
+    [theme.breakpoints.down(310 * 4)]: {
+      width: "100%",
     },
   },
   iconButton: {
@@ -46,14 +56,9 @@ export const matchHeaderStyles = makeStyles()((theme: Theme) => ({
     color: theme.palette.info.light,
   },
   matchLabel: {
-    width: `calc(100% - ${theme.spacing(32)})`,
+    width: "fit-content",
     gap: theme.spacing(2),
-    [theme.breakpoints.up(310 * 4)]: {
-      width: `calc(100% - ${theme.spacing(50)})`,
-    },
-    [theme.breakpoints.down(310 * 4)]: {
-      width: `calc(100% - ${theme.spacing(32)})`,
-    },
+
     p: {
       fontWeight: "bold",
       color: theme.palette.primary.contrastText,
