@@ -6,14 +6,14 @@ export const matchScoreboardStyles = makeStyles()((theme: Theme) => ({
     display: "flex",
     flexDirection: "column",
     gap: theme.spacing(8),
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(4),
     [theme.breakpoints.up(310 * 4)]: {
-      paddingBottom: theme.spacing(2),
+      paddingBottom: theme.spacing(4),
       marginLeft: theme.spacing(20),
       marginRight: theme.spacing(20),
     },
     [theme.breakpoints.down(310 * 4)]: {
-      paddingBottom: theme.spacing(18),
+      paddingBottom: theme.spacing(20),
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
     },
