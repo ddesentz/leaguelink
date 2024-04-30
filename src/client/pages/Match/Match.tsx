@@ -28,7 +28,6 @@ const MatchComponent: React.FunctionComponent<IMatch> = () => {
         doc(db, `leagues/${league.id}/matches`, params.matchId),
         (snapshot) => {
           matchSignals.selectedMatch.value = snapshot.data() as ILeagueMatch;
-          console.log(matchSignals.selectedMatch.value);
         }
       );
     }

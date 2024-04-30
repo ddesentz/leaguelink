@@ -19,7 +19,7 @@ export const leagueLinkTheme = createTheme({
       light: "#cfd0d2",
       main: "#8d8e90",
       dark: "#2b2c2e",
-      contrastText: "#000000",
+      contrastText: "#191919",
     },
     error: {
       light: "#EF9A9A",
