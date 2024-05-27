@@ -69,6 +69,24 @@ const AppHeaderComponent: React.FunctionComponent<IAppHeader> = () => {
     return faPlus;
   };
 
+  const getActionText = () => {
+    console.log(params.page, params.userId);
+    if (!params.page) return "";
+
+    switch (params.page) {
+      case "explore":
+        return "";
+      case "scores":
+        return "Add Match";
+      case "standings":
+        return "Add Team";
+      case "schedule":
+        return "Schedule Match";
+      default:
+        return "";
+    }
+  };
+
   const UserMenu = () => (
     <Menu
       anchorEl={anchorEl}

@@ -12,6 +12,7 @@ import { GlobalStyles } from "tss-react";
 import { useStyles } from "tss-react/mui";
 import { League } from "./client/pages/League/League";
 import { Match } from "./client/pages/Match/Match";
+import { CreateTeam } from "./client/pages/Create/Team/CreateTeam";
 
 const AuthLayout = () => {
   const outlet = useOutlet();
@@ -71,6 +72,7 @@ export const router = createBrowserRouter(
     <Route element={<AuthLayout />}>
       <Route path="/" element={<LeagueLink />} />
       <Route path="/:leagueId/:page?" element={<League />} />
+      <Route path="/:leagueId/create/:createType" element={<League />} />
       <Route path="/:leagueId/user/:userId?" element={<League />} />
       <Route path="/:leagueId/:page/:matchId" element={<Match />} />
       <Route path="/auth/login" element={<Login />} />

@@ -15,7 +15,7 @@ export const leagueStyles = makeStyles()((theme: Theme) => ({
     width: "100%",
     overflow: "auto",
     [theme.breakpoints.up(310 * 4)]: {
-      marginLeft: theme.spacing(40),
+      marginLeft: theme.spacing(39),
     },
   },
   defaultHeaderText: {

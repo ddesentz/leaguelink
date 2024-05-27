@@ -10,6 +10,7 @@ import { LeagueScores } from "../../components/League/Scores/LeagueScores";
 import { LeagueStandings } from "../../components/League/Standings/LeagueStandings";
 import { LeagueSchedule } from "../../components/League/Schedule/LeagueSchedule";
 import { LeagueUser } from "../../components/League/User/LeagueUser";
+import { CreateTeam } from "../Create/Team/CreateTeam";
 
 const PageSelect: Map<string | undefined, any> = new Map([
   [undefined, <LeagueHome />],
@@ -19,17 +20,33 @@ const PageSelect: Map<string | undefined, any> = new Map([
   ["schedule", <LeagueSchedule />],
 ]);
 
+const CreateSelect: Map<string | undefined, any> = new Map([
+  ["team", <CreateTeam />],
+]);
+
 interface ILeague {}
 const LeagueComponent: React.FunctionComponent<ILeague> = () => {
   const { classes } = leagueStyles();
   const params = useParams();
+
+  const renderContent = () => {
+    if (params.userId) {
+      return <LeagueUser />;
+    }
+
+    if (params.createType) {
+      return CreateSelect.get(params.createType);
+    }
+
+    return PageSelect.get(params.page);
+  };
 
   return (
     <div className={classes.leagueContainer}>
       <AppHeader />
       <LeagueNav />
       <Grid container direction="column" className={classes.contentContainer}>
-        {params.userId ? <LeagueUser /> : PageSelect.get(params.page)}
+        {renderContent()}
       </Grid>
     </div>
   );
