@@ -1,7 +1,7 @@
 import * as React from "react";
 import { leagueHomeStyles } from "./LeagueHomeStyles";
 import { Grid, Typography } from "@mui/material";
-import { DetailedActionButton } from "../../_common/DetailedActionButton";
+import { DetailedActionButton } from "../../_common/DetailedActionButton/DetailedActionButton";
 import { useNavigate } from "react-router-dom";
 import { getLocalStorage } from "../../../hooks/useLocalStorage";
 
@@ -13,7 +13,11 @@ const LeagueHomeComponent: React.FunctionComponent<ILeagueHome> = () => {
   const league = getLocalStorage("selectedLeague");
 
   const handleImportTeam = () => {
-    navigate(`/${league.id}/create/team`);
+    navigate(`/${league.id}/new/team`);
+  };
+
+  const handleImportMatch = () => {
+    navigate(`/${league.id}/new/match`);
   };
 
   return (
@@ -48,19 +52,19 @@ const LeagueHomeComponent: React.FunctionComponent<ILeagueHome> = () => {
               Grow the Sport.
             </Typography>
             <Typography className={classes.majorText}>
-              Grow the League.
+              Link the League.
             </Typography>
           </Grid>
         </Grid>
         <DetailedActionButton
-          title="Import a Team"
+          title="Link a Team"
           description="Add an existing team to NETC"
           handleClick={handleImportTeam}
         />
         <DetailedActionButton
-          title="Record a Match"
+          title="Link a Match"
           description="Add a historical match to NETC"
-          handleClick={() => {}}
+          handleClick={handleImportMatch}
         />
       </Grid>
     </>

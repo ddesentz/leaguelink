@@ -69,24 +69,6 @@ const AppHeaderComponent: React.FunctionComponent<IAppHeader> = () => {
     return faPlus;
   };
 
-  const getActionText = () => {
-    console.log(params.page, params.userId);
-    if (!params.page) return "";
-
-    switch (params.page) {
-      case "explore":
-        return "";
-      case "scores":
-        return "Add Match";
-      case "standings":
-        return "Add Team";
-      case "schedule":
-        return "Schedule Match";
-      default:
-        return "";
-    }
-  };
-
   const UserMenu = () => (
     <Menu
       anchorEl={anchorEl}
@@ -169,8 +151,8 @@ const AppHeaderComponent: React.FunctionComponent<IAppHeader> = () => {
                 onClick={handleProfileMenuOpen}
               >
                 <Avatar
-                  alt={""}
-                  src={user.photoURL || ""}
+                  alt={user!.displayName!}
+                  src={user!.photoURL!}
                   className={classes.userIcon}
                 />
               </IconButton>

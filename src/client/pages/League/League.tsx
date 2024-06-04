@@ -22,20 +22,20 @@ const PageSelect: Map<string | undefined, any> = new Map([
 
 const CreateSelect: Map<string | undefined, any> = new Map([
   ["team", <CreateTeam />],
+  ["match", <div></div>],
 ]);
 
 interface ILeague {}
 const LeagueComponent: React.FunctionComponent<ILeague> = () => {
   const { classes } = leagueStyles();
   const params = useParams();
-
   const renderContent = () => {
     if (params.userId) {
       return <LeagueUser />;
     }
 
-    if (params.createType) {
-      return CreateSelect.get(params.createType);
+    if (params.newType) {
+      return CreateSelect.get(params.newType);
     }
 
     return PageSelect.get(params.page);
