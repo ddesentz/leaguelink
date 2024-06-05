@@ -1,13 +1,12 @@
 import * as React from "react";
 import { createTeamStyles } from "./CreateTeamStyles";
-import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import defaultPNG from "../../../assets/common/defaultPNG.png";
 import { TeamBanner } from "../../../components/_common/TeamBanner/TeamBanner";
 import { StandardInput } from "../../../components/_common/StandardInput/StandardInput";
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { leagueLinkTheme } from "../../../common/Theme";
 import { StandardAutocomplete } from "../../../components/_common/StandardAutocomplete/StandardAutocomplete";
+import { LeagueNav } from "../../../components/LeagueNav/LeagueNav";
+import { StandardColorSelect } from "../../../components/_common/StandardColorSelect/StandardColorSelect";
 
 interface ICreateTeam {}
 
@@ -141,24 +140,21 @@ const top100Films = [
 const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
   const { classes } = createTeamStyles();
   const [logo, setLogo] = React.useState<string>(defaultPNG);
-  const [abbr, setAbbr] = React.useState<string>("TEAM");
-  const [primaryColor, setPrimaryColor] = React.useState<string>("#7F9FBA");
-  const [secondaryColor, setSecondaryColor] = React.useState<string>("#FFFFFF");
+  const [teamName, setTeamName] = React.useState<string>("");
+  const [abbr, setAbbr] = React.useState<string>("");
+  const [color, setColor] = React.useState<string>("#7F9FBA");
 
   return (
     <div className={classes.createTeamContainer}>
-      <TeamBanner
-        logo={logo}
-        abbr={abbr}
-        primaryColor={primaryColor}
-        secondaryColor={secondaryColor}
-      />
+      <LeagueNav />
+      <TeamBanner logo={logo} abbr={abbr} color={color} />
       <Grid
         container
         direction="column"
         className={classes.createTeamContentContainer}
       >
         <img src={defaultPNG} className={classes.logo} />
+        <Typography className={classes.logoText}>Team Logo</Typography>
         <Grid
           container
           direction="column"
@@ -173,7 +169,11 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
             <Typography className={classes.inputLabelText}>
               Team Name
             </Typography>
-            <StandardInput placeholder="Team Name" />
+            <StandardInput
+              value={teamName}
+              setValue={setTeamName}
+              placeholder="Team Name"
+            />
           </Grid>
           <Grid
             container
@@ -184,7 +184,11 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
             <Typography className={classes.inputLabelText}>
               Abbreviation
             </Typography>
-            <StandardInput placeholder="Abbreviation" />
+            <StandardInput
+              value={abbr}
+              setValue={setAbbr}
+              placeholder="Abbreviation"
+            />
           </Grid>
           <Grid
             container
@@ -211,6 +215,17 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
               placeholder="Pool"
               options={["A", "B", "C", "D", "E", "PIP"]}
             />
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Typography className={classes.inputLabelText}>
+              Team Color
+            </Typography>
+            <StandardColorSelect />
           </Grid>
         </Grid>
 

@@ -11,21 +11,18 @@ import {
   MenuItem,
   Toolbar,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
 import Icon from "@mdi/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { mdiLogout, mdiSlashForward } from "@mdi/js";
+import { mdiLogout } from "@mdi/js";
 import { getAuth, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate, useParams } from "react-router-dom";
-import { getLocalStorage } from "../../hooks/useLocalStorage";
 import {
   faCommentDots,
   faGear,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import { leagueLinkTheme } from "../../common/Theme";
 
 interface IAppHeader {}
 
@@ -36,9 +33,6 @@ const AppHeaderComponent: React.FunctionComponent<IAppHeader> = () => {
   const auth = getAuth();
   const [user] = useAuthState(auth);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const leagueData = getLocalStorage("selectedLeague");
-  const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
-
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -103,25 +97,12 @@ const AppHeaderComponent: React.FunctionComponent<IAppHeader> = () => {
       <Toolbar>
         <div className={classes.logoContainer}>
           <img
-            src={
-              params.leagueId && isMobile
-                ? "/assets/LeagueLink_Shield_v1.svg"
-                : "/assets/LeagueLink_Logo_v1.svg"
-            }
+            src={"/assets/LeagueLink_Logo_v1.svg"}
             alt=""
             onClick={() => navigate(`/`)}
             className={classes.logo}
           />
-          {params.leagueId && leagueData && (
-            <>
-              <Icon path={mdiSlashForward} className={classes.breadCrumbIcon} />
-              <Typography className={classes.leagueText}>
-                {leagueData.abbr}
-              </Typography>
-            </>
-          )}
         </div>
-
         <Grid
           container
           direction="row"
@@ -129,36 +110,31 @@ const AppHeaderComponent: React.FunctionComponent<IAppHeader> = () => {
           justifyContent="flex-end"
           className={classes.actionContainer}
         >
-          {params.page !== "explore" && (
-            <IconButton disableFocusRipple disableRipple>
-              <Badge
-                badgeContent={getActionBadgeCount()}
-                className={classes.notificaitonBadge}
-              >
-                <FontAwesomeIcon
-                  icon={getActionIcon()}
-                  className={classes.notificationIcon}
-                />
-              </Badge>
+          <IconButton disableFocusRipple disableRipple>
+            <Badge
+              badgeContent={getActionBadgeCount()}
+              className={classes.notificaitonBadge}
+            >
+              <FontAwesomeIcon
+                icon={getActionIcon()}
+                className={classes.notificationIcon}
+              />
+            </Badge>
+          </IconButton>
+          <>
+            <IconButton
+              disableFocusRipple
+              disableRipple
+              onClick={handleProfileMenuOpen}
+            >
+              <Avatar
+                alt={user!.displayName!}
+                src={user!.photoURL!}
+                className={classes.userIcon}
+              />
             </IconButton>
-          )}
-
-          {!params.leagueId && (
-            <>
-              <IconButton
-                disableFocusRipple
-                disableRipple
-                onClick={handleProfileMenuOpen}
-              >
-                <Avatar
-                  alt={user!.displayName!}
-                  src={user!.photoURL!}
-                  className={classes.userIcon}
-                />
-              </IconButton>
-              <UserMenu />
-            </>
-          )}
+            <UserMenu />
+          </>
         </Grid>
       </Toolbar>
     </AppBar>

@@ -8,7 +8,7 @@ export const leagueNavStyles = makeStyles()((theme: Theme) => ({
     [theme.breakpoints.up(310 * 4)]: {
       height: "100%",
       width: theme.spacing(39),
-      zIndex: 100,
+      zIndex: 200,
       left: 0,
       backgroundImage: `linear-gradient(270deg, ${theme.palette.primary.dark}cc, ${theme.palette.secondary.contrastText}11)`,
     },
@@ -19,6 +19,7 @@ export const leagueNavStyles = makeStyles()((theme: Theme) => ({
     },
   },
   toolbarContainer: {
+    overflow: "hidden",
     [theme.breakpoints.up(310 * 4)]: {
       width: "100%",
       padding: "0 !important",
@@ -28,17 +29,30 @@ export const leagueNavStyles = makeStyles()((theme: Theme) => ({
     [theme.breakpoints.up(310 * 4)]: {
       height: "100%",
       flexDirection: "column",
-      alignItems: "flex-start",
       justifyContent: "center",
+      alignItems: "flex-start",
       zIndex: 2,
       left: 0,
-      paddingTop: theme.spacing(20),
-
       gap: theme.spacing(5),
     },
     [theme.breakpoints.down(310 * 4)]: {
       height: theme.spacing(16),
     },
+  },
+  logoContainer: {
+    height: theme.spacing(16),
+    width: `100%`,
+    paddingLeft: theme.spacing(3),
+    display: "flex",
+    alignSelf: "center",
+    alignItems: "center",
+    borderBottom: `1px solid ${theme.palette.primary.light}33`,
+  },
+  logo: {
+    height: theme.spacing(12),
+    objectFit: "scale-down",
+    cursor: "pointer",
+    filter: `drop-shadow(0 0 2px ${theme.palette.primary.light})`,
   },
   navButton: {
     display: "flex",

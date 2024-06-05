@@ -13,11 +13,11 @@ const LeagueHomeComponent: React.FunctionComponent<ILeagueHome> = () => {
   const league = getLocalStorage("selectedLeague");
 
   const handleImportTeam = () => {
-    navigate(`/${league.id}/new/team`);
+    navigate(`/${league.id}/team/create`);
   };
 
   const handleImportMatch = () => {
-    navigate(`/${league.id}/new/match`);
+    // navigate(`/${league.id}/new/match`);
   };
 
   return (

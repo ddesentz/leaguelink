@@ -76,7 +76,7 @@ const StandardAutocompleteComponent: React.FunctionComponent<
             height={Math.min(maxRendered! * itemSize!, itemCount * itemSize!)}
             width="100%"
             outerElementType={OuterElementType}
-            itemSize={itemSize! + 8}
+            itemSize={itemSize!}
             overscanCount={5}
             itemCount={itemCount}
           >
@@ -104,7 +104,6 @@ const StandardAutocompleteComponent: React.FunctionComponent<
     event: React.SyntheticEvent<Element, Event>,
     value: string | IKeyValue | null
   ) => {
-    console.log("On change triggered!");
     setValue(value);
   };
 
@@ -114,7 +113,6 @@ const StandardAutocompleteComponent: React.FunctionComponent<
       className={classes.standardAutocompleteContainer}
     >
       <Autocomplete
-        id="combo-box-demo"
         options={[...options]}
         disableListWrap
         getOptionLabel={(option) => {

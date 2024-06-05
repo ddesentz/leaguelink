@@ -3,19 +3,24 @@ import { makeStyles } from "tss-react/mui";
 
 export const createTeamStyles = makeStyles()((theme: Theme) => ({
   createTeamContainer: {
-    width: "100%",
-    height: "100%",
+    textAlign: "center",
+    backgroundColor: theme.palette.background.default,
+    width: "100vw",
+    height: "100svh",
+    overflow: "hidden",
+    display: "flex",
   },
   createTeamContentContainer: {
+    marginTop: theme.spacing(16),
     width: "100%",
-    height: `calc(100% - ${theme.spacing(16)})`,
-    color: theme.palette.primary.contrastText,
+    overflow: "auto",
     [theme.breakpoints.up(310 * 4)]: {
-      padding: `${theme.spacing(4)} ${theme.spacing(32)}`,
+      marginLeft: theme.spacing(39),
+      padding: `${theme.spacing(4)} ${theme.spacing(16)}`,
     },
     [theme.breakpoints.down(310 * 4)]: {
-      padding: `${theme.spacing(4)} ${theme.spacing(2)}`,
-      height: `calc(100% - ${theme.spacing(32)})`,
+      padding: `${theme.spacing(4)} ${theme.spacing(4)}`,
+      paddingBottom: theme.spacing(20),
     },
   },
   propertyContainer: {
@@ -36,12 +41,21 @@ export const createTeamStyles = makeStyles()((theme: Theme) => ({
       border: `${theme.spacing(1)} solid ${theme.palette.primary.contrastText}AA`,
     },
   },
+  logoText: {
+    fontSize: theme.spacing(4),
+    fontWeight: "bold",
+    textAlign: "center",
+    width: "100%",
+    color: theme.palette.info.light,
+    paddingTop: theme.spacing(2),
+  },
   inputLabelText: {
     fontSize: theme.spacing(4),
     fontWeight: "bold",
     width: theme.spacing(30),
     textAlign: "start",
     marginRight: theme.spacing(2),
+    color: theme.palette.info.light,
   },
   inputLabelDivider: {
     height: theme.spacing(7),

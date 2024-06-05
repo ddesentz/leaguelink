@@ -7,6 +7,7 @@ import {
   IconButton,
   Toolbar,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { getLocalStorage } from "../../hooks/useLocalStorage";
@@ -18,6 +19,7 @@ import ScoresIcon from "../../assets/navIcons/Scores.svg";
 import StandingsIcon from "../../assets/navIcons/Standings.svg";
 import ScheduleIcon from "../../assets/navIcons/Schedule.svg";
 import { ReactSVG } from "react-svg";
+import { leagueLinkTheme } from "../../common/Theme";
 
 interface ILeagueNav {}
 
@@ -28,6 +30,7 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
   const auth = getAuth();
   const [user] = useAuthState(auth);
   const league = getLocalStorage("selectedLeague");
+  const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
 
   if (user === null || user === undefined) {
     return null;
@@ -47,6 +50,20 @@ const LeagueNavComponent: React.FunctionComponent<ILeagueNav> = () => {
           justifyContent="space-between"
           className={classes.headerContainer}
         >
+          {!isMobile && (
+            <div className={classes.logoContainer}>
+              <img
+                src={
+                  params.leagueId && isMobile
+                    ? "/assets/LeagueLink_Shield_v1.svg"
+                    : "/assets/LeagueLink_Logo_v1.svg"
+                }
+                alt=""
+                onClick={() => navigate(`/`)}
+                className={classes.logo}
+              />
+            </div>
+          )}
           <IconButton
             disableFocusRipple
             disableRipple

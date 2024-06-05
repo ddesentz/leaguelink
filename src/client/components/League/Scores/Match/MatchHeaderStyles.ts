@@ -6,6 +6,10 @@ export const matchHeaderStyles = makeStyles()((theme: Theme) => ({
     backgroundColor: theme.palette.background.default,
     color: theme.palette.primary.contrastText,
     backgroundImage: `linear-gradient(${theme.palette.secondary.contrastText}11, ${theme.palette.primary.dark}cc)`,
+    zIndex: 100,
+    [theme.breakpoints.up(310 * 4)]: {
+      paddingLeft: theme.spacing(39),
+    },
   },
   leftItems: {
     display: "flex",
@@ -33,12 +37,7 @@ export const matchHeaderStyles = makeStyles()((theme: Theme) => ({
     },
   },
   matchContentHeader: {
-    [theme.breakpoints.up(310 * 4)]: {
-      width: `calc(100% - ${theme.spacing(39)})`,
-    },
-    [theme.breakpoints.down(310 * 4)]: {
-      width: "100%",
-    },
+    width: "100%",
   },
   iconButton: {
     width: theme.spacing(16),

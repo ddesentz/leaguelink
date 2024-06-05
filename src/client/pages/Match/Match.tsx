@@ -39,8 +39,8 @@ const MatchComponent: React.FunctionComponent<IMatch> = () => {
 
   return (
     <div className={classes.matchContainer}>
-      <MatchHeader />
       <LeagueNav />
+      <MatchHeader />
       <Grid container direction="column" className={classes.contentContainer}>
         <MatchStickyTotal />
         <div className={classes.matchContent}>

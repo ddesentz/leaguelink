@@ -32,16 +32,6 @@ const MatchHeaderComponent: React.FunctionComponent<IMatchHeader> = () => {
   return (
     <AppBar className={classes.appBarContainer}>
       <Toolbar className={classes.toolbarContainer}>
-        <img
-          src={
-            isMobile
-              ? "/assets/LeagueLink_Shield_v1.svg"
-              : "/assets/LeagueLink_Logo_v1.svg"
-          }
-          alt=""
-          onClick={() => navigate(`/`)}
-          className={classes.logo}
-        />
         <Grid
           container
           direction="row"

@@ -4,13 +4,17 @@ import { Autocomplete, InputBase, Paper, TextField } from "@mui/material";
 import { leagueLinkTheme } from "../../../common/Theme";
 
 interface IStandardInput {
-  placeholder: string;
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  placeholder?: string;
   height?: string;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
 }
 
 const StandardInputComponent: React.FunctionComponent<IStandardInput> = ({
+  value,
+  setValue,
   placeholder,
   height,
   startIcon,
@@ -24,7 +28,14 @@ const StandardInputComponent: React.FunctionComponent<IStandardInput> = ({
       className={classes.standardInputContainer}
     >
       {startIcon}
-      <InputBase placeholder={placeholder} className={classes.textField} />
+      <InputBase
+        value={value}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setValue(event.target.value);
+        }}
+        placeholder={placeholder}
+        className={classes.textField}
+      />
       {endIcon}
     </Paper>
   );

@@ -35,14 +35,16 @@ export const standardAutocompleteStyles = makeStyles()((theme: Theme) => ({
       backgroundColor: theme.palette.background.default,
       borderRadius: theme.spacing(0),
     },
+    "& > div > div > div": {
+      padding: `0 !important`,
+    },
   },
   defaultItemRenderer: {
     boxSizing: "border-box",
-
     "& > li": {
       height: "100%",
       borderBottom: `1px solid ${theme.palette.info.light}11`,
-      lineHeight: theme.spacing(7),
+      lineHeight: theme.spacing(6),
       padding: 0,
       display: "-webkit-box !important",
       WebkitLineClamp: 2,
