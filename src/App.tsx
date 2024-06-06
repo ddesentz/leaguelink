@@ -60,6 +60,14 @@ const AuthLayout = () => {
                 backgroundPosition: "1000% 5000%",
               },
             },
+            "@keyframes hoverButton": {
+              from: {
+                transform: "translate(-50%, -50%) scale(2) rotate(0turn)",
+              },
+              to: {
+                transform: "translate(-50%, -50%) scale(2) rotate(1turn)",
+              },
+            },
           }}
         />
       </AuthProvider>

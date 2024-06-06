@@ -31,6 +31,10 @@ export const teamBannerStyles = makeStyles()((theme: Theme) => ({
     transform: "scale(1.5)",
     opacity: 0.5,
     zIndex: 1,
+    width: theme.spacing(50),
+    height: theme.spacing(50),
+    objectFit: "contain",
+    boxSizing: "border-box",
   },
   lightText: {
     fontSize: theme.spacing(10),

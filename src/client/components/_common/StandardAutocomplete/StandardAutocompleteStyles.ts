@@ -30,6 +30,7 @@ export const standardAutocompleteStyles = makeStyles()((theme: Theme) => ({
     },
   },
   virtualPopper: {
+    zIndex: 1000,
     marginTop: `${theme.spacing(2)} !important`,
     "*::-webkit-scrollbar-track": {
       backgroundColor: theme.palette.background.default,

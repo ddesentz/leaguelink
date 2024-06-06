@@ -2,6 +2,18 @@ import { Theme } from "@mui/material";
 import { makeStyles } from "tss-react/mui";
 
 export const createTeamStyles = makeStyles()((theme: Theme) => ({
+  contentWrapper: {
+    width: "100%",
+    height: "100%",
+    marginTop: theme.spacing(16),
+    zIndex: 1,
+    [theme.breakpoints.up(310 * 4)]: {
+      marginLeft: theme.spacing(39),
+    },
+    [theme.breakpoints.down(310 * 4)]: {
+      paddingBottom: theme.spacing(20),
+    },
+  },
   createTeamContainer: {
     textAlign: "center",
     backgroundColor: theme.palette.background.default,
@@ -14,31 +26,34 @@ export const createTeamStyles = makeStyles()((theme: Theme) => ({
     marginTop: theme.spacing(16),
     width: "100%",
     overflow: "auto",
+    flexWrap: "nowrap",
+    maxWidth: theme.spacing(250),
+    margin: "0 auto",
     [theme.breakpoints.up(310 * 4)]: {
-      marginLeft: theme.spacing(39),
       padding: `${theme.spacing(4)} ${theme.spacing(16)}`,
+      height: `calc(100% - ${theme.spacing(16)})`,
     },
     [theme.breakpoints.down(310 * 4)]: {
       padding: `${theme.spacing(4)} ${theme.spacing(4)}`,
-      paddingBottom: theme.spacing(20),
+      height: `calc(100% - ${theme.spacing(32)})`,
     },
   },
   propertyContainer: {
     paddingTop: theme.spacing(4),
     gap: theme.spacing(4),
+    paddingBottom: theme.spacing(10),
+    marginBottom: "auto",
   },
-  logo: {
+  teamLogo: {
     width: theme.spacing(50),
     height: theme.spacing(50),
-    borderRadius: "50%",
-    backgroundColor: theme.palette.primary.light,
+    cursor: "pointer",
     marginLeft: "auto",
     marginRight: "auto",
-    border: `${theme.spacing(1)} solid ${theme.palette.primary.contrastText}`,
-    cursor: "pointer",
-    "&:hover": {
-      backgroundColor: theme.palette.primary.light + "AA",
-      border: `${theme.spacing(1)} solid ${theme.palette.primary.contrastText}AA`,
+    "& > img": {
+      objectFit: "contain",
+      boxSizing: "border-box",
+      padding: theme.spacing(2),
     },
   },
   logoText: {

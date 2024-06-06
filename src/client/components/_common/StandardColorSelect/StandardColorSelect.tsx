@@ -7,14 +7,15 @@ import { StandardInput } from "../StandardInput/StandardInput";
 
 interface IStandardColorSelect {
   height?: string;
+  color: string;
+  setColor: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const StandardColorSelectComponent: React.FunctionComponent<
   IStandardColorSelect
-> = ({ height }) => {
+> = ({ height, color, setColor }) => {
   const { classes } = standardColorSelectStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [color, setColor] = React.useState("#7F9FBA");
   const [width, setWidth] = React.useState(0);
 
   const handleClick = (event: any) => {

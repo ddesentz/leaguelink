@@ -1,12 +1,14 @@
 import * as React from "react";
 import { createTeamStyles } from "./CreateTeamStyles";
-import { Button, Grid, Typography } from "@mui/material";
-import defaultPNG from "../../../assets/common/defaultPNG.png";
+import { Avatar, Grid, Typography } from "@mui/material";
+import defaultShield from "../../../assets/common/defaultShield.png";
 import { TeamBanner } from "../../../components/_common/TeamBanner/TeamBanner";
 import { StandardInput } from "../../../components/_common/StandardInput/StandardInput";
 import { StandardAutocomplete } from "../../../components/_common/StandardAutocomplete/StandardAutocomplete";
 import { LeagueNav } from "../../../components/LeagueNav/LeagueNav";
 import { StandardColorSelect } from "../../../components/_common/StandardColorSelect/StandardColorSelect";
+import { StandardButton } from "../../../components/_common/StandardButton/StandardButton";
+import { leagueLinkTheme } from "../../../common/Theme";
 
 interface ICreateTeam {}
 
@@ -139,131 +141,132 @@ const top100Films = [
 
 const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
   const { classes } = createTeamStyles();
-  const [logo, setLogo] = React.useState<string>(defaultPNG);
+  const [logo, setLogo] = React.useState<string>(defaultShield);
   const [teamName, setTeamName] = React.useState<string>("");
   const [abbr, setAbbr] = React.useState<string>("");
-  const [color, setColor] = React.useState<string>("#7F9FBA");
+  const [color, setColor] = React.useState(
+    leagueLinkTheme.palette.primary.main
+  );
+  const ref = React.useRef<HTMLInputElement | null>(null);
+
+  const FileSelector = () =>
+    React.createElement("input", {
+      type: "file",
+      accept: "image/png, image/jpeg",
+      ref: ref,
+      style: { display: "none" },
+      onChange: function (e) {
+        if (e.target.files && e.target.files?.length > 0) {
+          const urlObject = URL.createObjectURL(e.target.files[0]);
+          setLogo(urlObject);
+        }
+      },
+    });
+
+  const handleBrowse = () => {
+    if (ref.current !== null) {
+      ref.current.click();
+    }
+  };
 
   return (
     <div className={classes.createTeamContainer}>
       <LeagueNav />
       <TeamBanner logo={logo} abbr={abbr} color={color} />
-      <Grid
-        container
-        direction="column"
-        className={classes.createTeamContentContainer}
-      >
-        <img src={defaultPNG} className={classes.logo} />
-        <Typography className={classes.logoText}>Team Logo</Typography>
+      <div className={classes.contentWrapper}>
         <Grid
           container
           direction="column"
-          className={classes.propertyContainer}
+          className={classes.createTeamContentContainer}
         >
+          <Avatar
+            onClick={handleBrowse}
+            src={logo}
+            style={{ backgroundColor: color }}
+            className={classes.teamLogo}
+          />
+          <FileSelector />
+          <Typography className={classes.logoText}>Team Logo</Typography>
           <Grid
             container
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
+            direction="column"
+            className={classes.propertyContainer}
           >
-            <Typography className={classes.inputLabelText}>
-              Team Name
-            </Typography>
-            <StandardInput
-              value={teamName}
-              setValue={setTeamName}
-              placeholder="Team Name"
-            />
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography className={classes.inputLabelText}>
+                Team Name
+              </Typography>
+              <StandardInput
+                value={teamName}
+                setValue={setTeamName}
+                placeholder="Team Name"
+              />
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography className={classes.inputLabelText}>
+                Abbreviation
+              </Typography>
+              <StandardInput
+                value={abbr}
+                setValue={setAbbr}
+                placeholder="Abbreviation"
+              />
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography className={classes.inputLabelText}>
+                Home Course
+              </Typography>
+              <StandardAutocomplete
+                placeholder="Home Course"
+                options={top100Films}
+              />
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography className={classes.inputLabelText}>Pool</Typography>
+              <StandardAutocomplete
+                placeholder="Pool"
+                options={["A", "B", "C", "D", "E", "PIP"]}
+              />
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography className={classes.inputLabelText}>
+                Team Color
+              </Typography>
+              <StandardColorSelect color={color} setColor={setColor} />
+            </Grid>
           </Grid>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography className={classes.inputLabelText}>
-              Abbreviation
-            </Typography>
-            <StandardInput
-              value={abbr}
-              setValue={setAbbr}
-              placeholder="Abbreviation"
-            />
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography className={classes.inputLabelText}>
-              Home Course
-            </Typography>
-            <StandardAutocomplete
-              placeholder="Home Course"
-              options={top100Films}
-            />
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography className={classes.inputLabelText}>Pool</Typography>
-            <StandardAutocomplete
-              placeholder="Pool"
-              options={["A", "B", "C", "D", "E", "PIP"]}
-            />
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography className={classes.inputLabelText}>
-              Team Color
-            </Typography>
-            <StandardColorSelect />
-          </Grid>
+          <StandardButton
+            text="Create Team"
+            onClick={() => console.log("Create Team")}
+            height={leagueLinkTheme.spacing(16)}
+          />
         </Grid>
-
-        {/* <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            className={classes.colorPickerContainer}
-          >
-            <div
-              style={{ backgroundColor: primaryColor }}
-              className={classes.colorPreview}
-            />
-            <Typography>Primary</Typography>
-          </Grid>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            className={classes.colorPickerContainer}
-          >
-            <div
-              style={{ backgroundColor: secondaryColor }}
-              className={classes.colorPreview}
-            />
-            <Typography>Secondary</Typography>
-          </Grid>
-        </Grid> */}
-        <Button className={classes.createTeamButton}>Create Team</Button>
-      </Grid>
+      </div>
     </div>
   );
 };
