@@ -94,4 +94,28 @@ export const createTeamStyles = makeStyles()((theme: Theme) => ({
       backgroundColor: theme.palette.primary.light + "AA",
     },
   },
+  courseItemNameText: {
+    fontSize: theme.spacing(4),
+    fontWeight: "bold",
+    color: theme.palette.primary.contrastText,
+    width: "100%",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
+  courseItemLocationText: {
+    fontSize: theme.spacing(4),
+    color: theme.palette.primary.contrastText,
+    fontWeight: 100,
+    fontStyle: "italic",
+    width: `calc(100% - ${theme.spacing(5)})`,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
+  courseItemLocationIcon: {
+    height: theme.spacing(4),
+    color: theme.palette.primary.light,
+    marginRight: theme.spacing(1),
+  },
 }));

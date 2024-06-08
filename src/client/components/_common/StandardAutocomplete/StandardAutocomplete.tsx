@@ -6,16 +6,17 @@ import {
   Popper,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { leagueLinkTheme } from "../../../common/Theme";
 import { FixedSizeList } from "react-window";
-
-type IKeyValue = {
-  key: string;
-  value: any;
-};
+import { IKeyValue } from "../../../common/types/KeyValue";
 
 interface IStandardAutocomplete {
+  value: any;
+  setValue: React.Dispatch<React.SetStateAction<any>>;
+  searchTerm?: string;
+  setSearchTerm?: React.Dispatch<React.SetStateAction<string>>;
   placeholder: string;
   options: string[] | IKeyValue[];
   height?: string;
@@ -23,11 +24,16 @@ interface IStandardAutocomplete {
   endIcon?: React.ReactNode;
   maxRendered?: number;
   itemSize?: number;
+  itemRenderer?: (item: IKeyValue, index: number) => JSX.Element;
 }
 
 const StandardAutocompleteComponent: React.FunctionComponent<
   IStandardAutocomplete
 > = ({
+  value,
+  setValue,
+  searchTerm,
+  setSearchTerm,
   placeholder,
   options,
   height,
@@ -35,17 +41,22 @@ const StandardAutocompleteComponent: React.FunctionComponent<
   endIcon,
   maxRendered,
   itemSize,
+  itemRenderer,
 }) => {
   const { classes } = standardAutocompleteStyles();
-  const [value, setValue] = React.useState<string | IKeyValue | null>(null);
 
   const ListboxComponent = React.forwardRef<
     HTMLDivElement,
     React.HTMLAttributes<HTMLElement>
   >((props, ref) => {
     const { children, ...other } = props;
-    const itemData: React.ReactElement[] =
-      props.children as React.ReactElement[];
+    const itemData: React.ReactElement[] = [];
+    (children as React.ReactElement[]).forEach(
+      (item: React.ReactElement & { children?: React.ReactElement[] }) => {
+        itemData.push(item);
+        itemData.push(...(item.children || []));
+      }
+    );
     const itemCount = itemData.length;
 
     const OuterElementContext = React.createContext({});
@@ -55,15 +66,18 @@ const StandardAutocompleteComponent: React.FunctionComponent<
     });
 
     const defaultRenderer = (props: any) => {
-      const { index, style } = props;
+      const { data, index, style } = props;
+      const dataSet = data[index];
+
       return (
         <Typography
-          id={`item-${index}`}
+          {...dataSet[0]}
           key={index}
           style={style}
+          component={"div"}
           className={classes.defaultItemRenderer}
         >
-          {itemData[index]}
+          {itemRenderer ? itemRenderer(dataSet[1], dataSet[2]) : dataSet[1]}
         </Typography>
       );
     };
@@ -88,12 +102,18 @@ const StandardAutocompleteComponent: React.FunctionComponent<
   });
 
   const VirtualPopper = (props: any) => {
+    const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
+
     return (
       <Popper
         open={props.open}
         anchorEl={props.anchorEl}
         className={classes.virtualPopper}
-        style={{ width: props.style.width + 24 }}
+        style={{
+          width: isMobile
+            ? `calc(100% - ${leagueLinkTheme.spacing(4)})`
+            : props.style.width + 24,
+        }}
       >
         {props.children}
       </Popper>
@@ -105,6 +125,12 @@ const StandardAutocompleteComponent: React.FunctionComponent<
     value: string | IKeyValue | null
   ) => {
     setValue(value);
+  };
+
+  const handleSearchTermChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchTerm && setSearchTerm(event.target.value as string);
   };
 
   return (
@@ -121,16 +147,24 @@ const StandardAutocompleteComponent: React.FunctionComponent<
         }}
         PopperComponent={VirtualPopper}
         ListboxComponent={ListboxComponent}
+        renderOption={(props, option, state) =>
+          [props, option, state.index] as React.ReactNode
+        }
         renderInput={(params) => (
           <TextField
             {...params}
             variant="standard"
+            value={searchTerm}
+            onChange={handleSearchTermChange}
             placeholder={placeholder}
             className={classes.textField}
           />
         )}
         value={value}
         onChange={handleOnChange}
+        isOptionEqualToValue={(option, value) =>
+          itemRenderer ? option.key === value.key : option === value
+        }
         className={classes.autocomplete}
       />
     </Paper>

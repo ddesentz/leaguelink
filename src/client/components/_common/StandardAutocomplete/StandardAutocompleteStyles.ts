@@ -42,28 +42,27 @@ export const standardAutocompleteStyles = makeStyles()((theme: Theme) => ({
   },
   defaultItemRenderer: {
     boxSizing: "border-box",
-    "& > li": {
-      height: "100%",
-      borderBottom: `1px solid ${theme.palette.info.light}11`,
-      lineHeight: theme.spacing(6),
-      padding: 0,
-      display: "-webkit-box !important",
-      WebkitLineClamp: 2,
-      WebkitBoxOrient: "vertical",
+    height: "100%",
+    borderBottom: `1px solid ${theme.palette.info.light}11`,
+    lineHeight: theme.spacing(6),
+    padding: 0,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    cursor: "pointer",
+    paddingLeft: `${theme.spacing(3)} !important`,
+    "& > p": {
       overflow: "hidden",
       textOverflow: "ellipsis",
-      whiteSpace: "pre-wrap",
-      paddingLeft: `${theme.spacing(7)} !important`,
-      textIndent: theme.spacing(-4),
-
-      "&.Mui-focused": {
-        backgroundColor: `${theme.palette.primary.light}AA !important`,
-      },
-      "&[aria-selected=true]": {
-        backgroundColor: `${theme.palette.primary.light}AA !important`,
-        color: theme.palette.background.default,
-        fontWeight: "bold",
-      },
+      whiteSpace: "nowrap",
+    },
+    "&.Mui-focused": {
+      backgroundColor: `${theme.palette.primary.light}33 !important`,
+    },
+    "&[aria-selected=true]": {
+      backgroundColor: `${theme.palette.primary.light}66 !important`,
+      fontWeight: "bold",
     },
   },
 }));
