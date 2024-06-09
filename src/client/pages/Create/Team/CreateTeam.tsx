@@ -13,12 +13,13 @@ import { getFunctions, httpsCallable } from "firebase/functions";
 import { IKeyValue } from "../../../common/types/KeyValue";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { app } from "../../../..";
 
 interface ICreateTeam {}
 
 const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
   const { classes } = createTeamStyles();
-  const functions = getFunctions();
+  const functions = getFunctions(app);
   const [logo, setLogo] = React.useState<string>(defaultShield);
   const [teamName, setTeamName] = React.useState<string>("");
   const [abbr, setAbbr] = React.useState<string>("");
@@ -77,6 +78,7 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
         direction="column"
         alignItems="flex-start"
         justifyContent="center"
+        height="100%"
       >
         <Typography className={classes.courseItemNameText}>
           {item.key}

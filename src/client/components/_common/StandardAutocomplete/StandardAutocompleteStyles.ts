@@ -10,6 +10,9 @@ export const standardAutocompleteStyles = makeStyles()((theme: Theme) => ({
   },
   autocomplete: {
     width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
   },
   textField: {
     flex: 1,
@@ -29,12 +32,57 @@ export const standardAutocompleteStyles = makeStyles()((theme: Theme) => ({
       },
     },
   },
+  keyboardAutocompleteContainer: {
+    position: "absolute",
+    top: 0,
+    left: 40,
+    zIndex: 9000,
+    flex: 1,
+    width: `calc(100% - ${theme.spacing(10)})`,
+    fontSize: "inherit",
+    "& .MuiInputLabel-shrink": {
+      display: "none",
+    },
+    "& > div": {
+      "&:before": {
+        display: "none",
+      },
+      "&:after": {
+        display: "none",
+      },
+    },
+  },
+  keyboardBackButton: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    zIndex: 9000,
+    flex: 1,
+    width: theme.spacing(10),
+    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 0,
+    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))`,
+  },
+  virtualWrapper: {
+    display: "flex",
+    height: "100%",
+    "& > div": {
+      overflow: "inherit !important",
+      height: "100%",
+      maxHeight: "unset",
+    },
+  },
   virtualPopper: {
-    zIndex: 1000,
-    marginTop: `${theme.spacing(2)} !important`,
+    zIndex: 9999999,
+    borderTop: `1px solid ${theme.palette.info.light}AA`,
+    boxSizing: "border-box",
     "*::-webkit-scrollbar-track": {
       backgroundColor: theme.palette.background.default,
       borderRadius: theme.spacing(0),
+    },
+    "& > div": {
+      height: "100%",
     },
     "& > div > div > div": {
       padding: `0 !important`,

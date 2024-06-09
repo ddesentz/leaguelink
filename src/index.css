@@ -1,9 +1,17 @@
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: "Montserrat";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow: auto;
+  background-color: #1d1e25;
+  background-image: url("./images/LeagueLink_Pattern_v1.png");
+  background-size: 10%;
 }
 
 code {

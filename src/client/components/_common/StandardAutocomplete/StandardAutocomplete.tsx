@@ -2,6 +2,7 @@ import * as React from "react";
 import { standardAutocompleteStyles } from "./StandardAutocompleteStyles";
 import {
   Autocomplete,
+  IconButton,
   Paper,
   Popper,
   TextField,
@@ -11,6 +12,9 @@ import {
 import { leagueLinkTheme } from "../../../common/Theme";
 import { FixedSizeList } from "react-window";
 import { IKeyValue } from "../../../common/types/KeyValue";
+import useDetectKeyboardOpen from "use-detect-keyboard-open";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 interface IStandardAutocomplete {
   value: any;
@@ -44,6 +48,31 @@ const StandardAutocompleteComponent: React.FunctionComponent<
   itemRenderer,
 }) => {
   const { classes } = standardAutocompleteStyles();
+  const autoCompleteRef = React.useRef<HTMLDivElement>(null);
+  const textFieldRef = React.useRef<HTMLDivElement>(null);
+  const keyboardOpen = useDetectKeyboardOpen();
+  const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
+  const [focused, setFocused] = React.useState<boolean>(false);
+  const [open, setOpen] = React.useState(false);
+  const closePopper = () => {
+    setOpen(false);
+    setFocused(false);
+    blurKeyboard();
+  };
+  const openPopper = () => {
+    setOpen(true);
+    setFocused(true);
+    focusKeyboard();
+  };
+
+  React.useEffect(() => {
+    document.addEventListener("focusout", () => {
+      closePopper();
+    });
+    return () => {
+      document.removeEventListener("focusout", closePopper);
+    };
+  }, []);
 
   const ListboxComponent = React.forwardRef<
     HTMLDivElement,
@@ -83,7 +112,17 @@ const StandardAutocompleteComponent: React.FunctionComponent<
     };
 
     return (
-      <div ref={ref}>
+      <div
+        ref={ref}
+        style={{
+          overflow: keyboardOpen ? "visible" : "auto",
+          display: focused ? "block" : "none",
+          height: keyboardOpen
+            ? `calc(100svh - ${leagueLinkTheme.spacing(10)})`
+            : "unset",
+        }}
+        className={classes.virtualWrapper}
+      >
         <OuterElementContext.Provider value={other}>
           <FixedSizeList
             itemData={itemData}
@@ -102,17 +141,16 @@ const StandardAutocompleteComponent: React.FunctionComponent<
   });
 
   const VirtualPopper = (props: any) => {
-    const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
-
     return (
       <Popper
         open={props.open}
         anchorEl={props.anchorEl}
         className={classes.virtualPopper}
         style={{
-          width: isMobile
-            ? `calc(100% - ${leagueLinkTheme.spacing(4)})`
-            : props.style.width + 24,
+          width: keyboardOpen ? `100%` : props.style.width + 24,
+          height: keyboardOpen
+            ? `calc(100% - ${leagueLinkTheme.spacing(10)})`
+            : props.style.height,
         }}
       >
         {props.children}
@@ -130,44 +168,82 @@ const StandardAutocompleteComponent: React.FunctionComponent<
   const handleSearchTermChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    focusKeyboard();
     setSearchTerm && setSearchTerm(event.target.value as string);
   };
 
+  const focusKeyboard = () => {
+    setFocused(true);
+  };
+
+  const blurKeyboard = () => {
+    if (textFieldRef.current) {
+      const inputEl = textFieldRef.current.querySelector("input");
+      if (inputEl) {
+        inputEl.blur();
+        setFocused(false);
+      }
+    }
+  };
+
   return (
-    <Paper
-      style={{ height: height, fontSize: `calc(${height} / 2.5)` }}
-      className={classes.standardAutocompleteContainer}
-    >
-      <Autocomplete
-        options={[...options]}
-        disableListWrap
-        getOptionLabel={(option) => {
-          if (typeof option === "object") return option.key;
-          return option;
-        }}
-        PopperComponent={VirtualPopper}
-        ListboxComponent={ListboxComponent}
-        renderOption={(props, option, state) =>
-          [props, option, state.index] as React.ReactNode
+    <>
+      {keyboardOpen && focused && (
+        <IconButton
+          disableFocusRipple
+          disableRipple
+          className={classes.keyboardBackButton}
+        >
+          <FontAwesomeIcon icon={faChevronLeft} />
+        </IconButton>
+      )}
+      <Paper
+        style={{ height: height, fontSize: `calc(${height} / 2.5)` }}
+        className={
+          keyboardOpen && focused
+            ? classes.keyboardAutocompleteContainer
+            : classes.standardAutocompleteContainer
         }
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="standard"
-            value={searchTerm}
-            onChange={handleSearchTermChange}
-            placeholder={placeholder}
-            className={classes.textField}
-          />
-        )}
-        value={value}
-        onChange={handleOnChange}
-        isOptionEqualToValue={(option, value) =>
-          itemRenderer ? option.key === value.key : option === value
-        }
-        className={classes.autocomplete}
-      />
-    </Paper>
+      >
+        <Autocomplete
+          ref={autoCompleteRef}
+          open={open}
+          onOpen={openPopper}
+          onFocus={openPopper}
+          onClose={closePopper}
+          onBlur={closePopper}
+          options={[...options]}
+          disableListWrap
+          getOptionLabel={(option) => {
+            if (typeof option === "object") return option.key;
+            return option;
+          }}
+          PopperComponent={VirtualPopper}
+          ListboxComponent={ListboxComponent}
+          renderOption={(props, option, state) =>
+            [props, option, state.index] as React.ReactNode
+          }
+          renderInput={(params) => (
+            <TextField
+              ref={textFieldRef}
+              {...params}
+              variant="standard"
+              value={searchTerm}
+              onChange={handleSearchTermChange}
+              placeholder={placeholder}
+              className={classes.textField}
+            />
+          )}
+          value={value}
+          onChange={handleOnChange}
+          isOptionEqualToValue={(option, value) =>
+            itemRenderer ? option.key === value.key : option === value
+          }
+          blurOnSelect
+          className={classes.autocomplete}
+        />
+      </Paper>
+    </>
   );
 };
 

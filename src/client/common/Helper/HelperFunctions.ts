@@ -2,6 +2,8 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../..";
 import { v4 as uuidv4 } from "uuid";
 import { doublesSnapshot, matchPlaySnapshot } from "./HelperData";
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
+import { getApp } from "firebase/app";
 
 export const createNewMatchPlayMatchup = (
   leagueId: string,

@@ -46,7 +46,9 @@ export const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 auth.languageCode = "en";
 const functions = getFunctions(app);
-connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+if (process.env.NODE_ENV === "development") {
+  connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+}
 
 (async () => {
   await setPersistence(auth, browserLocalPersistence);

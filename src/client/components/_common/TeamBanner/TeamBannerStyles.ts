@@ -6,7 +6,7 @@ export const teamBannerStyles = makeStyles()((theme: Theme) => ({
     backgroundColor: theme.palette.background.default,
     color: theme.palette.primary.contrastText,
     backgroundImage: `linear-gradient(${theme.palette.secondary.contrastText}11, ${theme.palette.primary.dark}cc)`,
-    zIndex: 100,
+    zIndex: 1,
     [theme.breakpoints.up(310 * 4)]: {
       paddingLeft: theme.spacing(39),
     },
