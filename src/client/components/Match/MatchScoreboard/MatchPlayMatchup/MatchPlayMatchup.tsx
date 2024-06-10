@@ -1,7 +1,7 @@
 import * as React from "react";
 import { matchPlayMatchupStyles } from "./MatchPlayMatchupStyles";
 import { Avatar, Grid, Typography } from "@mui/material";
-import { IMatchPlayMatchup } from "../../../../common/types/MatchPlayMatchup";
+import { IMatchPlayMatchup } from "../../../../common/types/NETC/MatchPlayMatchup";
 import { leagueLinkTheme } from "../../../../common/Theme";
 
 const winningStyle = {

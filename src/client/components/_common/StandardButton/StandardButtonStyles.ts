@@ -11,7 +11,6 @@ export const standardButtonStyles = makeStyles()((theme: Theme) => ({
     flexShrink: 0,
     borderRadius: theme.spacing(10),
     display: "flex",
-    fontSize: "125%",
     "&:hover": {
       "&:before": {
         animation: "hoverButton 5s linear infinite",
@@ -38,7 +37,7 @@ export const standardButtonStyles = makeStyles()((theme: Theme) => ({
     "&:after": {
       content: '""',
       position: "absolute",
-      inset: theme.spacing(1),
+      inset: theme.spacing(0.5),
       background: theme.palette.background.paper,
       zIndex: -1,
       borderRadius: theme.spacing(10),

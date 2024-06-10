@@ -7,12 +7,18 @@ export const standardInputStyles = makeStyles()((theme: Theme) => ({
     display: "flex",
     alignItems: "center",
     flexGrow: 1,
+    "& .Mui-error": {
+      border: `1px solid ${theme.palette.error.main}`,
+      boxSizing: "border-box",
+    },
   },
   textField: {
     flex: 1,
     width: "min-content",
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
+    height: "100%",
+    borderRadius: "inherit",
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
     fontSize: "inherit",
   },
 }));

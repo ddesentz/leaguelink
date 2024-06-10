@@ -2,8 +2,21 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../..";
 import { v4 as uuidv4 } from "uuid";
 import { doublesSnapshot, matchPlaySnapshot } from "./HelperData";
-import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
-import { getApp } from "firebase/app";
+
+export const urlToBlob = (url: string) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener("error", reject);
+    xhr.addEventListener("readystatechange", () => {
+      if (xhr.readyState === 4) {
+        resolve(xhr.response);
+      }
+    });
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  });
+};
 
 export const createNewMatchPlayMatchup = (
   leagueId: string,

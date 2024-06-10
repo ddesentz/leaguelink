@@ -13,6 +13,7 @@ import { useStyles } from "tss-react/mui";
 import { League } from "./client/pages/League/League";
 import { Match } from "./client/pages/Match/Match";
 import { CreateTeam } from "./client/pages/Create/Team/CreateTeam";
+import { Team } from "./client/pages/Team/Team";
 
 const AuthLayout = () => {
   const outlet = useOutlet();
@@ -83,6 +84,7 @@ export const router = createBrowserRouter(
       <Route path="/:leagueId/user/:userId?" element={<League />} />
       <Route path="/:leagueId/:page/:matchId" element={<Match />} />
       <Route path="/:leagueId/team/create" element={<CreateTeam />} />
+      <Route path="/:leagueId/team/:teamId" element={<Team />} />
       <Route path="/auth/login" element={<Login />} />
     </Route>
   )

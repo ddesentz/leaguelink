@@ -2,8 +2,8 @@ import * as React from "react";
 import { doublesMatchupStyles } from "./DoublesMatchupStyles";
 import { Avatar, Grid, Typography } from "@mui/material";
 import { leagueLinkTheme } from "../../../../common/Theme";
-import { IDoublesMatchup } from "../../../../common/types/DoublesMatchup";
-import { IPlayerData } from "../../../../common/types/PlayerData";
+import { IDoublesMatchup } from "../../../../common/types/NETC/DoublesMatchup";
+import { IPlayerData } from "../../../../common/types/NETC/PlayerData";
 
 const winningStyle = {
   fontWeight: "bold",

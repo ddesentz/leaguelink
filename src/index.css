@@ -10,8 +10,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow: auto;
   background-color: #1d1e25;
-  background-image: url("./images/LeagueLink_Pattern_v1.png");
-  background-size: 10%;
+  background-image: url("./images/LeagueLink_Shield_v1.png");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 code {

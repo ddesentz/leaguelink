@@ -17,7 +17,7 @@ import { db } from "../../../..";
 import { getLocalStorage } from "../../../hooks/useLocalStorage";
 import clsx from "clsx";
 import { useNavigate } from "react-router";
-import { ILeagueMatch } from "../../../common/types/LeagueMatch";
+import { ILeagueMatch } from "../../../common/types/NETC/LeagueMatch";
 import { useAppSignals } from "../../../common/AppContext";
 
 interface ILeagueScores {}

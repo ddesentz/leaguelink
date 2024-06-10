@@ -10,15 +10,32 @@ import { StandardColorSelect } from "../../../components/_common/StandardColorSe
 import { StandardButton } from "../../../components/_common/StandardButton/StandardButton";
 import { leagueLinkTheme } from "../../../common/Theme";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { IKeyValue } from "../../../common/types/KeyValue";
+import { IKeyValue } from "../../../common/types/common/KeyValue";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { app } from "../../../..";
+import { app, db } from "../../../..";
+import { useNavigate, useParams } from "react-router";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { ITeamData } from "../../../common/types/NETC/TeamData";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { urlToBlob } from "../../../common/Helper/HelperFunctions";
+import { stat } from "fs";
 
 interface ICreateTeam {}
 
 const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
   const { classes } = createTeamStyles();
+  const { leagueId } = useParams();
+  const navigate = useNavigate();
+  const storage = getStorage(app);
   const functions = getFunctions(app);
   const [logo, setLogo] = React.useState<string>(defaultShield);
   const [teamName, setTeamName] = React.useState<string>("");
@@ -30,7 +47,24 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
   const [color, setColor] = React.useState(
     leagueLinkTheme.palette.primary.main
   );
-  const ref = React.useRef<HTMLInputElement | null>(null);
+  const [existingTeams, setExistingTeams] = React.useState<ITeamData[]>([]);
+  const [creatingTeam, setCreatingTeam] = React.useState<boolean>(false);
+  const fileSelectorRef = React.useRef<HTMLInputElement | null>(null);
+
+  React.useEffect(() => {
+    const getTeamsQuery = query(collection(db, "leagues", leagueId, "teams"));
+    const existingTeamsSnapshot = onSnapshot(getTeamsQuery, (snapshot) => {
+      if (!snapshot.empty && !creatingTeam) {
+        setExistingTeams([
+          ...snapshot.docs.map((doc) => {
+            return { teamId: doc.id, ...(doc.data() as ITeamData) };
+          }),
+        ]);
+      }
+    });
+
+    return () => existingTeamsSnapshot();
+  }, [leagueId, creatingTeam]);
 
   React.useEffect(() => {
     fetchCourses(searchCourse);
@@ -44,7 +78,7 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
         courseList.map((course: any) => {
           return {
             key: course.name,
-            value: { location: course.locationText },
+            value: { city: course.city, state: course.state },
           };
         })
       );
@@ -55,7 +89,7 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
     React.createElement("input", {
       type: "file",
       accept: "image/png, image/jpeg",
-      ref: ref,
+      ref: fileSelectorRef,
       style: { display: "none" },
       onChange: function (e) {
         if (e.target.files && e.target.files?.length > 0) {
@@ -66,8 +100,8 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
     });
 
   const handleBrowse = () => {
-    if (ref.current !== null) {
-      ref.current.click();
+    if (fileSelectorRef.current !== null) {
+      fileSelectorRef.current.click();
     }
   };
 
@@ -95,10 +129,61 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
             className={classes.courseItemLocationIcon}
           />
           <Typography className={classes.courseItemLocationText}>
-            {item.value.location}
+            {item.value.city}, {item.value.state}
           </Typography>
         </Grid>
       </Grid>
+    );
+  };
+
+  const validateTeamNames = () => {
+    return existingTeams.some(
+      (team) => team.teamName.toLowerCase() === teamName.toLowerCase()
+    );
+  };
+
+  const validateTeamAbbrs = () => {
+    return existingTeams.some(
+      (team) => team.abbr.toLowerCase() === abbr.toLowerCase()
+    );
+  };
+
+  const validateNewTeam = () => {
+    return (
+      teamName === "" ||
+      abbr === "" ||
+      homeCourse === null ||
+      pool === null ||
+      validateTeamNames() ||
+      validateTeamAbbrs()
+    );
+  };
+
+  const handleCreateTeam = async () => {
+    setCreatingTeam(true);
+    const newTeam = {
+      teamName: teamName,
+      abbr: abbr,
+      homeCourse: homeCourse?.key,
+      homeCity: homeCourse?.value.city,
+      homeState: homeCourse?.value.state,
+      pool: pool,
+      teamColor: color,
+    };
+
+    await addDoc(collection(db, "leagues", leagueId, "teams"), newTeam).then(
+      async (docRef) => {
+        const logoRef = ref(storage, `leagues/teams/${docRef.id}`);
+        const logoBlob = (await urlToBlob(logo)) as Blob;
+        uploadBytes(logoRef, logoBlob).then(() => {
+          getDownloadURL(logoRef).then((url) => {
+            updateDoc(docRef, { photoURL: url }).then(() => {
+              setCreatingTeam(false);
+              navigate(`/${leagueId}/team/${docRef.id}`);
+            });
+          });
+        });
+      }
     );
   };
 
@@ -138,6 +223,7 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
                 value={teamName}
                 setValue={setTeamName}
                 placeholder="Team Name"
+                error={validateTeamNames()}
               />
             </Grid>
             <Grid
@@ -153,6 +239,8 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
                 value={abbr}
                 setValue={setAbbr}
                 placeholder="Abbreviation"
+                error={validateTeamAbbrs()}
+                maxLength={4}
               />
             </Grid>
             <Grid
@@ -202,8 +290,10 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
           </Grid>
           <StandardButton
             text="Create Team"
-            onClick={() => console.log("Create Team")}
+            onClick={handleCreateTeam}
             height={leagueLinkTheme.spacing(16)}
+            disabled={validateNewTeam()}
+            loading={creatingTeam}
           />
         </Grid>
       </div>

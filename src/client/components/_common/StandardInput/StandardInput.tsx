@@ -1,24 +1,34 @@
 import * as React from "react";
 import { standardInputStyles } from "./StandardInputStyles";
-import { Autocomplete, InputBase, Paper, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  InputBase,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { leagueLinkTheme } from "../../../common/Theme";
 
 interface IStandardInput {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   placeholder?: string;
+  error?: boolean;
   height?: string;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
+  maxLength?: number;
 }
 
 const StandardInputComponent: React.FunctionComponent<IStandardInput> = ({
   value,
   setValue,
   placeholder,
+  error,
   height,
   startIcon,
   endIcon,
+  maxLength,
 }) => {
   const { classes } = standardInputStyles();
 
@@ -34,6 +44,10 @@ const StandardInputComponent: React.FunctionComponent<IStandardInput> = ({
           setValue(event.target.value);
         }}
         placeholder={placeholder}
+        error={error}
+        inputProps={{
+          maxLength: maxLength,
+        }}
         className={classes.textField}
       />
       {endIcon}
@@ -43,6 +57,8 @@ const StandardInputComponent: React.FunctionComponent<IStandardInput> = ({
 
 StandardInputComponent.defaultProps = {
   height: leagueLinkTheme.spacing(10),
+  error: false,
+  maxLength: 524288,
 };
 
 export const StandardInput = StandardInputComponent;

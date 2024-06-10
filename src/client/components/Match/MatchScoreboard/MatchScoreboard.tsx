@@ -11,9 +11,9 @@ import {
   createNewDoublesMatchup,
   createNewMatchPlayMatchup,
 } from "../../../common/Helper/HelperFunctions";
-import { IMatchPlayMatchup } from "../../../common/types/MatchPlayMatchup";
+import { IMatchPlayMatchup } from "../../../common/types/NETC/MatchPlayMatchup";
 import { leagueLinkTheme } from "../../../common/Theme";
-import { IDoublesMatchup } from "../../../common/types/DoublesMatchup";
+import { IDoublesMatchup } from "../../../common/types/NETC/DoublesMatchup";
 import { DoublesMatchup } from "./DoublesMatchup/DoublesMatchup";
 
 const winningStyle = {

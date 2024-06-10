@@ -8,7 +8,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../..";
 import { getLocalStorage } from "../../hooks/useLocalStorage";
 import { useAppSignals } from "../../common/AppContext";
-import { ILeagueMatch } from "../../common/types/LeagueMatch";
+import { ILeagueMatch } from "../../common/types/NETC/LeagueMatch";
 import { MatchStickyTotal } from "../../components/Match/MatchStickyTotal/MatchStickyTotal";
 import { MatchScoreboard } from "../../components/Match/MatchScoreboard/MatchScoreboard";
 import { MatchRosters } from "../../components/Match/MatchRosters/MatchRosters";

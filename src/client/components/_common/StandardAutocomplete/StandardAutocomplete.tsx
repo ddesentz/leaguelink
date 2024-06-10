@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { leagueLinkTheme } from "../../../common/Theme";
 import { FixedSizeList } from "react-window";
-import { IKeyValue } from "../../../common/types/KeyValue";
+import { IKeyValue } from "../../../common/types/common/KeyValue";
 import useDetectKeyboardOpen from "use-detect-keyboard-open";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
@@ -51,7 +51,6 @@ const StandardAutocompleteComponent: React.FunctionComponent<
   const autoCompleteRef = React.useRef<HTMLDivElement>(null);
   const textFieldRef = React.useRef<HTMLDivElement>(null);
   const keyboardOpen = useDetectKeyboardOpen();
-  const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
   const [focused, setFocused] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState(false);
   const closePopper = () => {
