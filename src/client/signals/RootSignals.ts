@@ -1,4 +1,5 @@
 import { createMatchSignals } from "./MatchSignals";
+import { createTeamSignals } from "./TeamSignals";
 
 const createRootSignals = () => {
   return {};
@@ -6,6 +7,7 @@ const createRootSignals = () => {
 
 export const rootSignals = {
   matchSignals: createMatchSignals(),
+  teamSignals: createTeamSignals(),
   rootSignals: createRootSignals(),
 };
 

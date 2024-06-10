@@ -7,6 +7,7 @@ import { faGear, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { StandardOptionButton } from "../../_common/StandardOptionButton/StandardOptionButton";
 import { StandardButton } from "../../_common/StandardButton/StandardButton";
 import { leagueLinkTheme } from "../../../common/Theme";
+import { useAppSignals } from "../../../common/AppContext";
 
 interface ITeamDetails {
   teamData: ITeamData;
@@ -16,6 +17,7 @@ const TeamDetailsComponent: React.FunctionComponent<ITeamDetails> = ({
   teamData,
 }) => {
   const { classes } = teamDetailsStyles();
+  const { teamSignals } = useAppSignals();
   const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
   const [season, setSeason] = React.useState<string>("2023-2024");
 
@@ -125,7 +127,9 @@ const TeamDetailsComponent: React.FunctionComponent<ITeamDetails> = ({
           <div className={classes.actionButtonWrapper}>
             <StandardButton
               text="Edit Team"
-              onClick={() => console.log("Edit Team")}
+              onClick={() => {
+                teamSignals.editingTeam.value = teamData;
+              }}
               height={
                 isMobile
                   ? leagueLinkTheme.spacing(8)

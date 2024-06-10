@@ -18,6 +18,7 @@ import { useNavigate, useParams } from "react-router";
 import {
   addDoc,
   collection,
+  doc,
   getDocs,
   onSnapshot,
   query,
@@ -27,25 +28,47 @@ import {
 import { ITeamData } from "../../../common/types/NETC/TeamData";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { urlToBlob } from "../../../common/Helper/HelperFunctions";
-import { stat } from "fs";
+import { useAppSignals } from "../../../common/AppContext";
 
 interface ICreateTeam {}
 
-const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
+const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = ({}) => {
   const { classes } = createTeamStyles();
   const { leagueId } = useParams();
+  const { teamSignals } = useAppSignals();
+  const editingTeamData = teamSignals.editingTeam.value;
   const navigate = useNavigate();
   const storage = getStorage(app);
   const functions = getFunctions(app);
-  const [logo, setLogo] = React.useState<string>(defaultShield);
-  const [teamName, setTeamName] = React.useState<string>("");
-  const [abbr, setAbbr] = React.useState<string>("");
-  const [homeCourse, setHomeCourse] = React.useState<IKeyValue | null>(null);
+  const [logo, setLogo] = React.useState<string>(
+    editingTeamData ? editingTeamData.photoURL : defaultShield
+  );
+  const [teamName, setTeamName] = React.useState<string>(
+    editingTeamData ? editingTeamData.teamName : ""
+  );
+  const [abbr, setAbbr] = React.useState<string>(
+    editingTeamData ? editingTeamData.abbr : ""
+  );
+  const [homeCourse, setHomeCourse] = React.useState<IKeyValue | null>(
+    editingTeamData
+      ? {
+          key: editingTeamData.homeCourse,
+          value: {
+            city: editingTeamData.homeCity,
+            state: editingTeamData.homeState,
+          },
+        }
+      : null
+  );
   const [searchCourse, setSearchCourse] = React.useState<string>("");
   const [courseOptions, setCourseOptions] = React.useState<IKeyValue[]>([]);
-  const [pool, setPool] = React.useState<string | null>(null);
+  const [pool, setPool] = React.useState<string | null>(
+    editingTeamData ? editingTeamData.pool : null
+  );
   const [color, setColor] = React.useState(
-    leagueLinkTheme.palette.primary.main
+    editingTeamData
+      ? editingTeamData.teamColor
+      : leagueLinkTheme.palette.primary.main
   );
   const [existingTeams, setExistingTeams] = React.useState<ITeamData[]>([]);
   const [creatingTeam, setCreatingTeam] = React.useState<boolean>(false);
@@ -63,7 +86,10 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
       }
     });
 
-    return () => existingTeamsSnapshot();
+    return () => {
+      teamSignals.editingTeam.value = null;
+      existingTeamsSnapshot();
+    };
   }, [leagueId, creatingTeam]);
 
   React.useEffect(() => {
@@ -137,12 +163,14 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
   };
 
   const validateTeamNames = () => {
+    if (editingTeamData && editingTeamData.teamName === teamName) return false;
     return existingTeams.some(
       (team) => team.teamName.toLowerCase() === teamName.toLowerCase()
     );
   };
 
   const validateTeamAbbrs = () => {
+    if (editingTeamData && editingTeamData.abbr === abbr) return false;
     return existingTeams.some(
       (team) => team.abbr.toLowerCase() === abbr.toLowerCase()
     );
@@ -171,20 +199,53 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
       teamColor: color,
     };
 
-    await addDoc(collection(db, "leagues", leagueId, "teams"), newTeam).then(
-      async (docRef) => {
-        const logoRef = ref(storage, `leagues/teams/${docRef.id}`);
-        const logoBlob = (await urlToBlob(logo)) as Blob;
-        uploadBytes(logoRef, logoBlob).then(() => {
-          getDownloadURL(logoRef).then((url) => {
-            updateDoc(docRef, { photoURL: url }).then(() => {
-              setCreatingTeam(false);
-              navigate(`/${leagueId}/team/${docRef.id}`);
+    if (editingTeamData) {
+      const editTeamDocRef = doc(
+        db,
+        "leagues",
+        leagueId,
+        "teams",
+        editingTeamData.teamId
+      );
+      await setDoc(editTeamDocRef, {
+        ...newTeam,
+        photoURL: editingTeamData.photoURL,
+      }).then(async () => {
+        if (logo !== editingTeamData.photoURL) {
+          const logoRef = ref(
+            storage,
+            `leagues/teams/${editingTeamData.teamId}`
+          );
+          const logoBlob = (await urlToBlob(logo)) as Blob;
+          uploadBytes(logoRef, logoBlob).then(() => {
+            getDownloadURL(logoRef).then((url) => {
+              updateDoc(editTeamDocRef, { photoURL: url }).then(() => {
+                setCreatingTeam(false);
+                navigate(`/${leagueId}/team/${editingTeamData.teamId}`);
+              });
             });
           });
-        });
-      }
-    );
+        } else {
+          setCreatingTeam(false);
+          navigate(`/${leagueId}/team/${editingTeamData.teamId}`);
+        }
+      });
+    } else {
+      await addDoc(collection(db, "leagues", leagueId, "teams"), newTeam).then(
+        async (docRef) => {
+          const logoRef = ref(storage, `leagues/teams/${docRef.id}`);
+          const logoBlob = (await urlToBlob(logo)) as Blob;
+          uploadBytes(logoRef, logoBlob).then(() => {
+            getDownloadURL(logoRef).then((url) => {
+              updateDoc(docRef, { photoURL: url }).then(() => {
+                setCreatingTeam(false);
+                navigate(`/${leagueId}/team/${docRef.id}`);
+              });
+            });
+          });
+        }
+      );
+    }
   };
 
   return (
@@ -289,7 +350,7 @@ const CreateTeamComponent: React.FunctionComponent<ICreateTeam> = () => {
             </Grid>
           </Grid>
           <StandardButton
-            text="Create Team"
+            text={editingTeamData ? "Update Team" : "Create Team"}
             onClick={handleCreateTeam}
             height={leagueLinkTheme.spacing(16)}
             disabled={validateNewTeam()}

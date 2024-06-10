@@ -9,12 +9,15 @@ import { LoadingFull } from "../../common/rive/LoadingFull";
 import { ITeamData } from "../../common/types/NETC/TeamData";
 import { TeamDetails } from "../../components/Team/TeamDetails/TeamDetails";
 import { Tab, Tabs } from "@mui/material";
+import { useAppSignals } from "../../common/AppContext";
+import { CreateTeam } from "../Create/Team/CreateTeam";
 
 interface ITeam {}
 
 const TeamComponent: React.FunctionComponent<ITeam> = () => {
   const { classes } = teamStyles();
   const { leagueId, teamId } = useParams();
+  const { teamSignals } = useAppSignals();
   const [team, setTeam] = React.useState<ITeamData | null>(null);
   const [selectedTab, setSelectedTab] = React.useState<string>("Schedule");
 
@@ -35,51 +38,61 @@ const TeamComponent: React.FunctionComponent<ITeam> = () => {
   };
 
   return (
-    <div className={classes.teamContainer}>
-      <LeagueNav />
-      {team !== null && (
-        <TeamBanner
-          logo={team.photoURL}
-          abbr={team.abbr}
-          color={team.teamColor}
-        />
-      )}
-      <div className={classes.contentWrapper}>
-        {team === null ? (
-          <div className={classes.loadingModal}>
-            <LoadingFull className={classes.loading} />
+    <>
+      {teamSignals.editingTeam.value ? (
+        <CreateTeam />
+      ) : (
+        <div className={classes.teamContainer}>
+          <LeagueNav />
+          {team !== null && (
+            <TeamBanner
+              logo={team.photoURL}
+              abbr={team.abbr}
+              color={team.teamColor}
+            />
+          )}
+          <div className={classes.contentWrapper}>
+            {team === null ? (
+              <div className={classes.loadingModal}>
+                <LoadingFull className={classes.loading} />
+              </div>
+            ) : (
+              <>
+                <TeamDetails teamData={team} />
+                <div className={classes.matchContent}>
+                  <Tabs
+                    value={selectedTab}
+                    onChange={handleChange}
+                    className={classes.tabs}
+                    TabIndicatorProps={{
+                      className: classes.tabIndicator,
+                    }}
+                  >
+                    <Tab
+                      label={"Schedule"}
+                      value={"Schedule"}
+                      disableRipple
+                      className={classes.tab}
+                    />
+                    <Tab
+                      label="Roster"
+                      value={"Roster"}
+                      disableRipple
+                      className={classes.tab}
+                    />
+                  </Tabs>
+                  {selectedTab === "Schedule" ? (
+                    <h1>Schedule</h1>
+                  ) : (
+                    <h1>Roster</h1>
+                  )}
+                </div>
+              </>
+            )}
           </div>
-        ) : (
-          <>
-            <TeamDetails teamData={team} />
-            <div className={classes.matchContent}>
-              <Tabs
-                value={selectedTab}
-                onChange={handleChange}
-                className={classes.tabs}
-                TabIndicatorProps={{
-                  className: classes.tabIndicator,
-                }}
-              >
-                <Tab
-                  label={"Schedule"}
-                  value={"Schedule"}
-                  disableRipple
-                  className={classes.tab}
-                />
-                <Tab
-                  label="Roster"
-                  value={"Roster"}
-                  disableRipple
-                  className={classes.tab}
-                />
-              </Tabs>
-              {selectedTab === "Schedule" ? <h1>Schedule</h1> : <h1>Roster</h1>}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 
