@@ -34,7 +34,6 @@ const LeagueComponent: React.FunctionComponent<ILeague> = () => {
   return (
     <div className={classes.leagueContainer}>
       <LeagueNav />
-      {!params.newType && <LeagueHeader />}
       <Grid container direction="column" className={classes.contentContainer}>
         {renderContent()}
       </Grid>

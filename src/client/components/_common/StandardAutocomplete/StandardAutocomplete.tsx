@@ -7,7 +7,6 @@ import {
   Popper,
   TextField,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
 import { leagueLinkTheme } from "../../../common/Theme";
 import { FixedSizeList } from "react-window";

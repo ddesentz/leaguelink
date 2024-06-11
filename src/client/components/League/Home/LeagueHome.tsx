@@ -4,6 +4,7 @@ import { Grid, Typography } from "@mui/material";
 import { DetailedActionButton } from "../../_common/DetailedActionButton/DetailedActionButton";
 import { useNavigate } from "react-router-dom";
 import { getLocalStorage } from "../../../hooks/useLocalStorage";
+import { LeagueHeader } from "../../LeagueHeader/LeagueHeader";
 
 interface ILeagueHome {}
 
@@ -22,6 +23,7 @@ const LeagueHomeComponent: React.FunctionComponent<ILeagueHome> = () => {
 
   return (
     <>
+      <LeagueHeader />
       <Grid
         container
         direction="column"

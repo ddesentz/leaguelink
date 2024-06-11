@@ -1,6 +1,6 @@
 import * as React from "react";
 import { standardButtonStyles } from "./StandardButtonStyles";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import { leagueLinkTheme } from "../../../common/Theme";
 import { LoadingDots } from "../../../common/rive/LoadingDots";
 

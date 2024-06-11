@@ -19,7 +19,6 @@ import {
   addDoc,
   collection,
   doc,
-  getDocs,
   onSnapshot,
   query,
   setDoc,

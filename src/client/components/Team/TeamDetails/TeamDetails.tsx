@@ -3,7 +3,7 @@ import { teamDetailsStyles } from "./TeamDetailsStyles";
 import { ITeamData } from "../../../common/types/NETC/TeamData";
 import { Avatar, Grid, Typography, useMediaQuery } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear, faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { StandardOptionButton } from "../../_common/StandardOptionButton/StandardOptionButton";
 import { StandardButton } from "../../_common/StandardButton/StandardButton";
 import { leagueLinkTheme } from "../../../common/Theme";

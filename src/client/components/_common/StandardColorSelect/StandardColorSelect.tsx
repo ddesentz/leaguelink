@@ -38,7 +38,7 @@ const StandardColorSelectComponent: React.FunctionComponent<
       />
       <Popover
         open={open}
-        onClose={() => setAnchorEl(null)}
+        onClose={handleClose}
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: "bottom",

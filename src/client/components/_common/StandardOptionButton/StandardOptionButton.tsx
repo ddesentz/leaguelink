@@ -1,17 +1,9 @@
 import * as React from "react";
 import { standardOptionButtonStyles } from "./StandardOptionButtonStyles";
-import {
-  Button,
-  Grid,
-  Popover,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Button, Popover, Typography, useMediaQuery } from "@mui/material";
 import { leagueLinkTheme } from "../../../common/Theme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { AutoSizer, List } from "react-virtualized";
-import { IKeyValue } from "../../../common/types/common/KeyValue";
 import { FixedSizeList } from "react-window";
 
 interface IStandardOptionButton {

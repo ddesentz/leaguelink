@@ -23,7 +23,6 @@ const MatchHeaderComponent: React.FunctionComponent<IMatchHeader> = () => {
   const navigate = useNavigate();
   const { matchSignals } = useAppSignals();
   const league = getLocalStorage("selectedLeague");
-  const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
   const [notify, setNotify] = React.useState(false);
 
   const handleBack = () => {

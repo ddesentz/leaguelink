@@ -1,9 +1,9 @@
 import * as React from "react";
 import { matchScoreboardStyles } from "./MatchScoreboardStyles";
-import { Button, Grid, IconButton, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../..";
 import { useParams } from "react-router";
 import { MatchPlayMatchup } from "./MatchPlayMatchup/MatchPlayMatchup";

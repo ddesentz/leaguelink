@@ -21,9 +21,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { leagueLinkTheme } from "../../common/Theme";
 
-interface ILeagueHeader {}
+interface ILeagueHeader {
+  title?: string;
+  actionButton?: () => React.JSX.Element;
+}
 
-const LeagueHeaderComponent: React.FunctionComponent<ILeagueHeader> = () => {
+const LeagueHeaderComponent: React.FunctionComponent<ILeagueHeader> = ({
+  title,
+  actionButton,
+}) => {
   const { classes } = leagueHeaderStyles();
   const params = useParams();
   const navigate = useNavigate();
@@ -68,24 +74,35 @@ const LeagueHeaderComponent: React.FunctionComponent<ILeagueHeader> = () => {
             </div>
           )}
           <Typography className={classes.leagueText}>
-            {isMobile ? leagueData.abbr : leagueData.name}
+            {title !== undefined
+              ? title
+              : isMobile
+                ? leagueData.abbr
+                : leagueData.name}
           </Typography>
-
-          <IconButton disableFocusRipple disableRipple>
-            <Badge
-              badgeContent={getActionBadgeCount()}
-              className={classes.notificaitonBadge}
-            >
-              <FontAwesomeIcon
-                icon={getActionIcon()}
-                className={classes.notificationIcon}
-              />
-            </Badge>
-          </IconButton>
+          {actionButton ? (
+            actionButton()
+          ) : (
+            <IconButton disableFocusRipple disableRipple>
+              <Badge
+                badgeContent={getActionBadgeCount()}
+                className={classes.notificaitonBadge}
+              >
+                <FontAwesomeIcon
+                  icon={getActionIcon()}
+                  className={classes.notificationIcon}
+                />
+              </Badge>
+            </IconButton>
+          )}
         </Grid>
       </Toolbar>
     </AppBar>
   );
+};
+
+LeagueHeaderComponent.defaultProps = {
+  title: undefined,
 };
 
 export const LeagueHeader = LeagueHeaderComponent;

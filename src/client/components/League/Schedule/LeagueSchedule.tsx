@@ -1,5 +1,6 @@
 import * as React from "react";
 import { leagueScheduleStyles } from "./LeagueScheduleStyles";
+import { LeagueHeader } from "../../LeagueHeader/LeagueHeader";
 
 interface ILeagueSchedule {}
 
@@ -8,7 +9,12 @@ const LeagueScheduleComponent: React.FunctionComponent<
 > = () => {
   const { classes } = leagueScheduleStyles();
 
-  return <div className={classes.leagueScheduleContainer}>SCHEDULE</div>;
+  return (
+    <>
+      <LeagueHeader />
+      <div className={classes.leagueScheduleContainer}>SCHEDULE</div>
+    </>
+  );
 };
 
 export const LeagueSchedule = LeagueScheduleComponent;

@@ -19,6 +19,7 @@ import clsx from "clsx";
 import { useNavigate } from "react-router";
 import { ILeagueMatch } from "../../../common/types/NETC/LeagueMatch";
 import { useAppSignals } from "../../../common/AppContext";
+import { LeagueHeader } from "../../LeagueHeader/LeagueHeader";
 
 interface ILeagueScores {}
 const LeagueScoresComponent: React.FunctionComponent<ILeagueScores> = () => {
@@ -137,41 +138,44 @@ const LeagueScoresComponent: React.FunctionComponent<ILeagueScores> = () => {
   };
 
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="flex-start"
-      className={classes.leagueScoresContainer}
-    >
-      <Paper className={classes.filterContainer}>
-        <InputBase
-          placeholder="Search Matches"
-          className={classes.filterTextField}
-        />
-        <IconButton disableFocusRipple disableRipple>
-          <Icon path={mdiMagnify} className={classes.searchIcon} />
-        </IconButton>
-        <Divider orientation="vertical" className={classes.filterDivider} />
-        <IconButton disableFocusRipple disableRipple>
-          <Icon path={mdiFilterVariant} className={classes.filterIcon} />
-        </IconButton>
-      </Paper>
-      <div className={classes.listContainer}>
-        <AutoSizer>
-          {({ width, height }) => (
-            <List
-              width={width}
-              height={height}
-              overscanRowCount={3}
-              rowCount={matches.length}
-              rowHeight={120}
-              rowRenderer={renderMatch}
-            />
-          )}
-        </AutoSizer>
-      </div>
-    </Grid>
+    <>
+      <LeagueHeader />
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="flex-start"
+        className={classes.leagueScoresContainer}
+      >
+        <Paper className={classes.filterContainer}>
+          <InputBase
+            placeholder="Search Matches"
+            className={classes.filterTextField}
+          />
+          <IconButton disableFocusRipple disableRipple>
+            <Icon path={mdiMagnify} className={classes.searchIcon} />
+          </IconButton>
+          <Divider orientation="vertical" className={classes.filterDivider} />
+          <IconButton disableFocusRipple disableRipple>
+            <Icon path={mdiFilterVariant} className={classes.filterIcon} />
+          </IconButton>
+        </Paper>
+        <div className={classes.listContainer}>
+          <AutoSizer>
+            {({ width, height }) => (
+              <List
+                width={width}
+                height={height}
+                overscanRowCount={3}
+                rowCount={matches.length}
+                rowHeight={120}
+                rowRenderer={renderMatch}
+              />
+            )}
+          </AutoSizer>
+        </div>
+      </Grid>
+    </>
   );
 };
 

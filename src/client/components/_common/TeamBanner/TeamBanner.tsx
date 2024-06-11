@@ -3,7 +3,7 @@ import { teamBannerStyles } from "./TeamBannerStyles";
 import { AppBar, Grid, IconButton, Toolbar, Typography } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDarkContrast } from "../../../common/Helper/HelperFunctions";
 
 interface ITeamBanner {
@@ -19,11 +19,10 @@ const TeamBannerComponent: React.FunctionComponent<ITeamBanner> = ({
 }) => {
   const { classes } = teamBannerStyles();
   const navigate = useNavigate();
-  const params = useParams();
   const useDark = useDarkContrast(color);
 
   const handleBack = () => {
-    navigate(`/${params.leagueId}`);
+    navigate(-1);
   };
 
   return (

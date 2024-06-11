@@ -1,12 +1,6 @@
 import * as React from "react";
 import { standardInputStyles } from "./StandardInputStyles";
-import {
-  Autocomplete,
-  InputBase,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { InputBase, Paper } from "@mui/material";
 import { leagueLinkTheme } from "../../../common/Theme";
 
 interface IStandardInput {
