@@ -52,7 +52,7 @@ const DoublesMatchupComponent: React.FunctionComponent<
         {matchUp.away.map((player: IPlayerData, index: number) => (
           <Grid item key={index} className={classes.playerRow}>
             <Avatar
-              alt={player.firstName[0]}
+              // alt={player.firstName[0]}
               src={player.photoURL}
               className={classes.playerAvatar}
             />
@@ -67,13 +67,13 @@ const DoublesMatchupComponent: React.FunctionComponent<
                 className={classes.awayPlayerName}
                 style={awayWin ? winningStyle : {}}
               >
-                {player.firstName}
+                {/* {player.firstName} */}
               </Typography>
               <Typography
                 className={classes.awayPlayerName}
                 style={awayWin ? winningStyle : {}}
               >
-                {player.lastName}
+                {/* {player.lastName} */}
               </Typography>
             </Grid>
           </Grid>
@@ -127,17 +127,17 @@ const DoublesMatchupComponent: React.FunctionComponent<
                 className={classes.homePlayerName}
                 style={homeWin ? winningStyle : {}}
               >
-                {player.firstName}
+                {/* {player.firstName} */}
               </Typography>
               <Typography
                 className={classes.homePlayerName}
                 style={homeWin ? winningStyle : {}}
               >
-                {player.lastName}
+                {/* {player.lastName} */}
               </Typography>
             </Grid>
             <Avatar
-              alt={player.firstName[0]}
+              // alt={player.firstName[0]}
               src={player.photoURL}
               className={classes.playerAvatar}
             />

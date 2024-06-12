@@ -64,17 +64,7 @@ const StandardOptionButtonComponent: React.FunctionComponent<
         disableTouchRipple
         disabled={disabled}
         onClick={handleClick}
-        style={
-          open
-            ? {
-                borderTopLeftRadius: 12,
-                borderTopRightRadius: 12,
-                borderBottomLeftRadius: 0,
-                borderBottomRightRadius: 0,
-                height: height,
-              }
-            : { height: height }
-        }
+        style={{ height: height }}
         endIcon={<FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} />}
         className={classes.standardOptionButtonContainer}
       >

@@ -1,6 +1,8 @@
 export interface IPlayerData {
   playerId: string;
-  firstName: string;
-  lastName: string;
+  displayName: string;
+  email: string;
   photoURL: string;
+  teamId?: string;
+  pdgaNumber?: number;
 }

@@ -59,25 +59,20 @@ export const standardOptionButtonStyles = makeStyles()((theme: Theme) => ({
   },
   optionsPopover: {
     "& .MuiPopover-paper": {
-      backgroundColor: "#566e85",
+      backgroundColor: theme.palette.background.default,
       backgroundImage: "unset",
       borderRadius: theme.spacing(1),
-      borderTopLeftRadius: 0,
-      borderTopRightRadius: 0,
-      "& > div": {
-        paddingBottom: theme.spacing(1),
-      },
       "*::-webkit-scrollbar-track": {
-        backgroundColor: "#566e85",
+        backgroundColor: theme.palette.background.default,
         borderRadius: theme.spacing(0),
       },
       "*::-webkit-scrollbar-thumb": {
         backgroundColor: theme.palette.background.paper,
         borderRadius: theme.spacing(2),
-        border: `0.3em solid #566e85`,
+        border: `0.3em solid ${theme.palette.background.default}`,
       },
       "*::-webkit-scrollbar-corner": {
-        backgroundColor: "#566e85",
+        backgroundColor: theme.palette.background.default,
       },
     },
   },
@@ -88,19 +83,20 @@ export const standardOptionButtonStyles = makeStyles()((theme: Theme) => ({
     boxSizing: "border-box",
     backgroundColor: theme.palette.background.default,
     cursor: "pointer",
+    borderBottom: `1px solid ${theme.palette.background.paper}AA`,
     "&:hover": {
       backgroundColor: theme.palette.background.paper + "EE",
     },
   },
   selectedOptionText: {
-    width: `calc(100% - ${theme.spacing(2)}) !important`,
-    margin: `0 ${theme.spacing(1)}`,
+    width: "100%",
     padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
     boxSizing: "border-box",
     backgroundColor: theme.palette.background.paper + "AA",
     color: theme.palette.primary.light,
     cursor: "pointer",
     fontWeight: "bold",
+    borderBottom: `1px solid ${theme.palette.background.paper}AA`,
     "&:hover": {
       backgroundColor: theme.palette.background.paper + "AA",
     },

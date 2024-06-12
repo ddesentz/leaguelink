@@ -30,16 +30,16 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../..";
-import { useAuth } from "../../hooks/useAuth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { leagueLinkTheme } from "../../common/Theme";
 import { LoadingFull } from "../../common/rive/LoadingFull";
+import { useNavigate } from "react-router-dom";
 
 interface ILogin {}
 const LoginComponent: React.FunctionComponent<ILogin> = () => {
   const { classes } = loginStyles();
-  const { login } = useAuth();
   const googleProvider = new GoogleAuthProvider();
+  const navigate = useNavigate();
   const auth = getAuth();
   const [user] = useAuthState(auth);
   const [errorMessage, setErrorMessage] = React.useState<string>("");
@@ -60,7 +60,7 @@ const LoginComponent: React.FunctionComponent<ILogin> = () => {
     if (user) {
       handleUserData();
       const userRef = onSnapshot(doc(db, "users", user.uid), (userSnapshot) => {
-        login({ ...userSnapshot.data(), uid: user.uid });
+        navigate("/", { replace: true });
       });
 
       return () => userRef();
@@ -142,6 +142,11 @@ const LoginComponent: React.FunctionComponent<ILogin> = () => {
     if (!isLogin && displayName.length < 4) {
       setInvalidDisplayName(true);
       setErrorMessage("Display name must be at least 4 characters long");
+      valid = false;
+    }
+    if (!isLogin && displayName.split(" ").length > 2) {
+      setInvalidDisplayName(true);
+      setErrorMessage("Display can not contain more than 2 spaces");
       valid = false;
     }
 

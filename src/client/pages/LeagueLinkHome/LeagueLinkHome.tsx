@@ -1,6 +1,5 @@
 import * as React from "react";
 import { leagueLinkStyles } from "./LeagueLinkHomeStyles";
-import { useAuth } from "../../hooks/useAuth";
 import { Navigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -12,7 +11,7 @@ interface ILeagueLink {}
 
 const LeagueLinkComponent: React.FunctionComponent<ILeagueLink> = () => {
   const { classes } = leagueLinkStyles();
-  const { currentUser } = useAuth();
+  const currentUser = getAuth();
   const auth = getAuth();
   const [user, loading] = useAuthState(auth);
 

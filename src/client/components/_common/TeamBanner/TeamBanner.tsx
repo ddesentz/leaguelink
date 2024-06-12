@@ -30,7 +30,8 @@ const TeamBannerComponent: React.FunctionComponent<ITeamBanner> = ({
       <Toolbar className={classes.toolbarContainer}>
         <div
           style={{
-            backgroundColor: color,
+            backgroundColor: color + "7f",
+            backgroundImage: `linear-gradient(#00000011, ${color}cc)`,
           }}
           className={classes.teamBannerContainer}
         >

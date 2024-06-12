@@ -1,7 +1,7 @@
 import { Theme } from "@mui/material";
 import { makeStyles } from "tss-react/mui";
 
-export const teamBannerStyles = makeStyles()((theme: Theme) => ({
+export const userBannerStyles = makeStyles()((theme: Theme) => ({
   appBarContainer: {
     backgroundColor: theme.palette.background.default,
     color: theme.palette.primary.contrastText,
@@ -39,7 +39,6 @@ export const teamBannerStyles = makeStyles()((theme: Theme) => ({
     boxSizing: "border-box",
   },
   lightText: {
-    fontSize: theme.spacing(10),
     height: theme.spacing(16),
     fontWeight: "bold",
     textAlign: "center",
@@ -49,9 +48,15 @@ export const teamBannerStyles = makeStyles()((theme: Theme) => ({
     alignItems: "center",
     justifyContent: "center",
     color: theme.palette.primary.contrastText,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    width: `calc(100% - ${theme.spacing(32)})`,
+    margin: `0 ${theme.spacing(16)}`,
+    fontSize: "2em",
+    lineHeight: "2em",
   },
   darkText: {
-    fontSize: theme.spacing(10),
     height: theme.spacing(16),
     fontWeight: "bold",
     textAlign: "center",
@@ -61,6 +66,13 @@ export const teamBannerStyles = makeStyles()((theme: Theme) => ({
     alignItems: "center",
     justifyContent: "center",
     color: theme.palette.secondary.contrastText,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    width: `calc(100% - ${theme.spacing(32)})`,
+    margin: `0 ${theme.spacing(16)}`,
+    fontSize: "2em",
+    lineHeight: "2em",
   },
   leftItems: {
     position: "absolute",

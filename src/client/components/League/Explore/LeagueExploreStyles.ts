@@ -149,12 +149,13 @@ export const leagueExploreStyles = makeStyles()((theme: Theme) => ({
   },
   courseItemLocationIcon: {
     color: theme.palette.primary.light,
-    marginRight: theme.spacing(2),
     [theme.breakpoints.up(310 * 4)]: {
       height: theme.spacing(4),
+      marginRight: theme.spacing(2),
     },
     [theme.breakpoints.down(310 * 4)]: {
       height: theme.spacing(3),
+      marginRight: theme.spacing(1),
     },
   },
   teamCourseText: {
