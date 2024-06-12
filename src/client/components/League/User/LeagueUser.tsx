@@ -3,7 +3,7 @@ import { leagueUserStyles } from "./LeagueUserStyles";
 import { UserBanner } from "../../_common/UserBanner/UserBanner";
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
-import { db } from "../../../..";
+import { app, db } from "../../../..";
 import { useParams } from "react-router";
 import { getLocalStorage } from "../../../hooks/useLocalStorage";
 import { IPlayerData } from "../../../common/types/NETC/PlayerData";
@@ -14,6 +14,7 @@ import { LeagueHeader } from "../../LeagueHeader/LeagueHeader";
 import { LoadingFull } from "../../../common/rive/LoadingFull";
 import { LeagueUserDetails } from "./LeagueUserDetails";
 import { ITeamData } from "../../../common/types/NETC/TeamData";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 interface ILeagueUser {}
 
@@ -21,11 +22,13 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
   const { classes } = leagueUserStyles();
   const auth = getAuth();
   const params = useParams();
+  const functions = getFunctions(app);
   const league = getLocalStorage("selectedLeague");
   const [displayUser, setDisplayUser] = React.useState<IPlayerData | null>(
     null
   );
   const [playerTeam, setPlayerTeam] = React.useState<ITeamData | null>(null);
+  const [pdgaData, setPDGAData] = React.useState<any | null>(null);
   const [noUser, setNoUser] = React.useState<boolean>(false);
   const [selectedTab, setSelectedTab] = React.useState<string>("Stats");
 
@@ -66,6 +69,19 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
         }
       }
     );
+  };
+
+  React.useEffect(() => {
+    if (displayUser?.pdgaNumber) {
+      getPDGADetails(displayUser.pdgaNumber);
+    }
+  }, [displayUser?.pdgaNumber]);
+
+  const getPDGADetails = async (pdgaNumber: number) => {
+    const callableReturnMessage = httpsCallable(functions, "getPlayerRating");
+    callableReturnMessage({ pdgaNumber: pdgaNumber }).then((result: any) => {
+      setPDGAData(result.data);
+    });
   };
 
   const createPlayer = async (user: User) => {
@@ -111,7 +127,11 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
     <div className={classes.leagueUserContainer}>
       <UserBanner playerData={displayUser} teamData={playerTeam} />
       <div className={classes.contentWrapper}>
-        <LeagueUserDetails playerData={displayUser} teamData={playerTeam} />
+        <LeagueUserDetails
+          playerData={displayUser}
+          teamData={playerTeam}
+          pdgaData={pdgaData}
+        />
         <div className={classes.matchContent}>
           <Tabs
             value={selectedTab}

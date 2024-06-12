@@ -1,4 +1,4 @@
-const { onCall } = require("firebase-functions/v2/https");
+import { onCall } from "..";
 
 exports.searchCourses = onCall((data: any) => {
   const searchTerm = data.data.searchTerm;

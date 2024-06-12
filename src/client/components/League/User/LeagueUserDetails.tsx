@@ -10,23 +10,24 @@ import { ITeamData } from "../../../common/types/NETC/TeamData";
 interface ILeagueUserDetails {
   playerData: IPlayerData;
   teamData: ITeamData | null;
+  pdgaData: any | null;
 }
 
 const LeagueUserDetailsComponent: React.FunctionComponent<
   ILeagueUserDetails
-> = ({ playerData, teamData }) => {
+> = ({ playerData, teamData, pdgaData }) => {
   const { classes } = leagueUserDetailsStyles();
   const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
   const [season, setSeason] = React.useState<string>("2023-2024");
-  const [playerRating, setPlayerRating] = React.useState<number | null>(null);
+  const [playerRating, setPlayerRating] = React.useState<
+    number | string | null
+  >(null);
 
   React.useEffect(() => {
-    if (playerData.pdgaNumber) {
-      getRating(playerData.pdgaNumber);
+    if (pdgaData && playerData.pdgaNumber) {
+      setPlayerRating(pdgaData.rating || "Expired");
     }
-  }, [playerData]);
-
-  const getRating = async (pdgaNumber: number) => {};
+  }, [pdgaData]);
 
   const handleNavigateToPDGAProfile = () => {
     window.open(
@@ -78,8 +79,10 @@ const LeagueUserDetailsComponent: React.FunctionComponent<
               justifyContent="center"
               className={classes.rowDetailContainer}
             >
-              <Typography className={classes.rowDetailValue}>Test</Typography>
-              <Typography className={classes.rowDetailLabel}>Pool</Typography>
+              <Typography className={classes.rowDetailValue}>
+                {playerRating}
+              </Typography>
+              <Typography className={classes.rowDetailLabel}>Rating</Typography>
             </Grid>
           )}
           <Grid
