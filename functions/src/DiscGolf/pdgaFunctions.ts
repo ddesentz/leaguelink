@@ -1,21 +1,44 @@
 import { onCall } from "..";
 
-exports.getPlayerRating = onCall((data: any) => {
+exports.getPlayerPage = onCall((data: any) => {
   const pdgaNumber = data.data.pdgaNumber;
+  const year = data.data.year;
+
+  return new Promise((resolve, reject) => {
+    fetch(`https://www.pdga.com/player/${pdgaNumber}/stats/${year}`).then(
+      (res) => {
+        res.text().then((html) => {
+          resolve(html);
+        });
+      }
+    );
+  });
+});
+
+exports.getPlayerPDGATournamentDetails = onCall((data: any) => {
+  const tournamentId = data.data.tournamentId;
+  const division = data.data.division;
 
   return new Promise((resolve, reject) => {
     fetch(
-      `https://api.pdga.com/services/json/players?pdga_number=${pdgaNumber}`,
-      {
-        headers: {
-          Cookie:
-            "SSESSf1f85588bb869a1781d21eec9fef1bff=_pI21LDH6rSnhTxWA2qnume8D4j63c4Sgp8WdUf9VI8",
-        },
-      }
+      `https://www.pdga.com/apps/tournament/live-api/live_results_fetch_round?TournID=${tournamentId}&Division=${division}`
     ).then((res) => {
       res.json().then((data) => {
-        console.log(data.players[0]);
-        resolve(data.players[0]);
+        resolve(data.data);
+      });
+    });
+  });
+});
+
+exports.getPlayerPDGATournamentResults = onCall((data: any) => {
+  const resultId = data.data.resultId;
+
+  return new Promise((resolve, reject) => {
+    fetch(
+      `https://www.pdga.com/apps/tournament/live-api/live_results_fetch_player?ResultID=${resultId}`
+    ).then((res) => {
+      res.json().then((data) => {
+        resolve(data.data);
       });
     });
   });

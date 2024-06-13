@@ -26,6 +26,9 @@ export const leagueUserStyles = makeStyles()((theme: Theme) => ({
     width: "100%",
     height: "100%",
     zIndex: 1,
+    overflowY: "auto",
+    overflowX: "hidden",
+    position: "relative",
     [theme.breakpoints.down(310 * 4)]: {
       paddingBottom: theme.spacing(20),
     },
@@ -47,13 +50,17 @@ export const leagueUserStyles = makeStyles()((theme: Theme) => ({
     height: "100%",
     width: "100%",
   },
-  matchContent: {
-    borderTop: `1px solid ${theme.palette.info.light}33`,
+  feedContent: {
     boxSizing: "border-box",
   },
   tabs: {
     width: "100%",
     backgroundColor: theme.palette.background.paper,
+    borderTop: `1px solid ${theme.palette.info.light}33`,
+    boxSizing: "border-box",
+    position: "sticky",
+    top: 0,
+    zIndex: 1,
   },
   tabIndicator: {
     backgroundColor: theme.palette.primary.light,

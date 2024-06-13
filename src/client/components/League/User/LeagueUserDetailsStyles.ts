@@ -1,6 +1,7 @@
 import { Theme } from "@mui/material";
 import { makeStyles } from "tss-react/mui";
 
+// @ts-ignore
 export const leagueUserDetailsStyles = makeStyles()((theme: Theme) => ({
   playerDetailsContainer: {
     display: "flex",
@@ -63,6 +64,7 @@ export const leagueUserDetailsStyles = makeStyles()((theme: Theme) => ({
     color: theme.palette.primary.contrastText,
     fontWeight: "bold",
     marginTop: theme.spacing(2),
+    fontSize: "2em",
     [theme.breakpoints.up(310 * 4)]: {
       fontSize: theme.spacing(6),
     },
@@ -70,18 +72,33 @@ export const leagueUserDetailsStyles = makeStyles()((theme: Theme) => ({
       fontSize: theme.spacing(5),
     },
   },
+  pdgaIcon: {
+    height: theme.spacing(5),
+    marginRight: theme.spacing(2),
+  },
+  ratingIcon: {
+    height: theme.spacing(5),
+    marginRight: theme.spacing(2),
+    color: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.light,
+    borderRadius: "50%",
+    border: `1px solid ${theme.palette.primary.light}`,
+    boxSizing: "border-box !important",
+  },
   pdgaNumberText: {
+    color: theme.palette.info.light,
+    marginRight: theme.spacing(2),
+    cursor: "pointer",
+    lineHeight: theme.spacing(5),
+    fontSize: theme.spacing(4),
+  },
+  pdgaRatingText: {
     color: theme.palette.primary.light,
     marginRight: theme.spacing(2),
     fontWeight: "bold",
-    fontStyle: "italic",
     cursor: "pointer",
-    [theme.breakpoints.up(310 * 4)]: {
-      height: theme.spacing(5),
-    },
-    [theme.breakpoints.down(310 * 4)]: {
-      height: theme.spacing(4),
-    },
+    lineHeight: theme.spacing(5),
+    fontSize: theme.spacing(4),
   },
   actionContainer: {
     marginTop: theme.spacing(2),

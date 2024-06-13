@@ -42,7 +42,7 @@ export const teamDetailsStyles = makeStyles()((theme: Theme) => ({
     },
   },
   rowDetailContainer: {
-    width: "50%",
+    flex: 1,
     height: "100%",
   },
   rowDetailLabel: {

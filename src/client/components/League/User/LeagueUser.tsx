@@ -15,6 +15,8 @@ import { LoadingFull } from "../../../common/rive/LoadingFull";
 import { LeagueUserDetails } from "./LeagueUserDetails";
 import { ITeamData } from "../../../common/types/NETC/TeamData";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { PlayerPDGAFeed } from "../../PDGA/PlayerPDGAFeed/PlayerPDGAFeed";
+import * as cheerio from "cheerio";
 
 interface ILeagueUser {}
 
@@ -28,9 +30,12 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
     null
   );
   const [playerTeam, setPlayerTeam] = React.useState<ITeamData | null>(null);
-  const [pdgaData, setPDGAData] = React.useState<any | null>(null);
+  const [pdgaRating, setPDGARating] = React.useState<number | string | null>(
+    null
+  );
   const [noUser, setNoUser] = React.useState<boolean>(false);
-  const [selectedTab, setSelectedTab] = React.useState<string>("Stats");
+  const [selectedTab, setSelectedTab] = React.useState<string>("PDGA");
+  const [season, setSeason] = React.useState<string>("2023-2024");
 
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -73,14 +78,28 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
 
   React.useEffect(() => {
     if (displayUser?.pdgaNumber) {
-      getPDGADetails(displayUser.pdgaNumber);
+      getPlayerRating(displayUser.pdgaNumber);
     }
   }, [displayUser?.pdgaNumber]);
 
-  const getPDGADetails = async (pdgaNumber: number) => {
-    const callableReturnMessage = httpsCallable(functions, "getPlayerRating");
-    callableReturnMessage({ pdgaNumber: pdgaNumber }).then((result: any) => {
-      setPDGAData(result.data);
+  const getPlayerRating = async (pdgaNumber: number) => {
+    const callableReturnMessage = httpsCallable(functions, "getPlayerPage");
+    callableReturnMessage({
+      pdgaNumber: pdgaNumber,
+      year: season.split("-")[1],
+    }).then((result: any) => {
+      const $ = cheerio.load(result.data);
+      const currentRating = $(".current-rating").text();
+      if (currentRating) {
+        setPDGARating(currentRating.split(":")[1].trim().split(" ")[0]);
+        return;
+      }
+      const membershipStatus = $(".membership-status").text();
+      if (membershipStatus) {
+        setPDGARating("Expired");
+        return;
+      }
+      setPDGARating(null);
     });
   };
 
@@ -101,6 +120,19 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setSelectedTab(newValue);
+  };
+
+  const renderFeed = () => {
+    switch (selectedTab) {
+      case "Stats":
+        return <div>Stats</div>;
+      case "Matches":
+        return <div>Matches</div>;
+      case "PDGA":
+        return (
+          <PlayerPDGAFeed pdgaNumber={displayUser.pdgaNumber} year={season} />
+        );
+    }
   };
 
   if (noUser)
@@ -130,38 +162,38 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
         <LeagueUserDetails
           playerData={displayUser}
           teamData={playerTeam}
-          pdgaData={pdgaData}
+          pdgaRating={pdgaRating}
+          season={season}
+          setSeason={setSeason}
         />
-        <div className={classes.matchContent}>
-          <Tabs
-            value={selectedTab}
-            onChange={handleChange}
-            className={classes.tabs}
-            TabIndicatorProps={{
-              className: classes.tabIndicator,
-            }}
-          >
-            <Tab
-              label="Stats"
-              value={"Stats"}
-              disableRipple
-              className={classes.tab}
-            />
-            <Tab
-              label={"Matches"}
-              value={"Matches"}
-              disableRipple
-              className={classes.tab}
-            />
-            <Tab
-              label="PDGA"
-              value={"PDGA"}
-              disableRipple
-              className={classes.tab}
-            />
-          </Tabs>
-          <h1>{selectedTab}</h1>
-        </div>
+        <Tabs
+          value={selectedTab}
+          onChange={handleChange}
+          className={classes.tabs}
+          TabIndicatorProps={{
+            className: classes.tabIndicator,
+          }}
+        >
+          <Tab
+            label="Stats"
+            value={"Stats"}
+            disableRipple
+            className={classes.tab}
+          />
+          <Tab
+            label={"Matches"}
+            value={"Matches"}
+            disableRipple
+            className={classes.tab}
+          />
+          <Tab
+            label="PDGA"
+            value={"PDGA"}
+            disableRipple
+            className={classes.tab}
+          />
+        </Tabs>
+        <div className={classes.feedContent}>{renderFeed()}</div>
       </div>
     </div>
   );

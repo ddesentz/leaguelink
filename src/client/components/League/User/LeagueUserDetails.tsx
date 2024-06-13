@@ -6,28 +6,31 @@ import { StandardOptionButton } from "../../_common/StandardOptionButton/Standar
 import { leagueLinkTheme } from "../../../common/Theme";
 import { StandardButton } from "../../_common/StandardButton/StandardButton";
 import { ITeamData } from "../../../common/types/NETC/TeamData";
+import { useNavigate, useParams } from "react-router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRegistered } from "@fortawesome/free-solid-svg-icons";
 
 interface ILeagueUserDetails {
   playerData: IPlayerData;
   teamData: ITeamData | null;
-  pdgaData: any | null;
+  pdgaRating: number | string | null;
+  season: string;
+  setSeason: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const LeagueUserDetailsComponent: React.FunctionComponent<
   ILeagueUserDetails
-> = ({ playerData, teamData, pdgaData }) => {
+> = ({ playerData, teamData, pdgaRating, season, setSeason }) => {
   const { classes } = leagueUserDetailsStyles();
+  const navigate = useNavigate();
+  const { leagueId } = useParams();
   const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
-  const [season, setSeason] = React.useState<string>("2023-2024");
-  const [playerRating, setPlayerRating] = React.useState<
-    number | string | null
-  >(null);
 
-  React.useEffect(() => {
-    if (pdgaData && playerData.pdgaNumber) {
-      setPlayerRating(pdgaData.rating || "Expired");
+  const handleNavigateToTeamPage = () => {
+    if (playerData.teamId) {
+      navigate(`/${leagueId}/team/${playerData.teamId}`);
     }
-  }, [pdgaData]);
+  };
 
   const handleNavigateToPDGAProfile = () => {
     window.open(
@@ -64,6 +67,8 @@ const LeagueUserDetailsComponent: React.FunctionComponent<
             direction="column"
             alignItems="center"
             justifyContent="center"
+            onClick={handleNavigateToTeamPage}
+            style={{ cursor: "pointer" }}
             className={classes.rowDetailContainer}
           >
             <Typography className={classes.rowDetailValue}>
@@ -71,20 +76,6 @@ const LeagueUserDetailsComponent: React.FunctionComponent<
             </Typography>
             <Typography className={classes.rowDetailLabel}>Team</Typography>
           </Grid>
-          {playerRating && (
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justifyContent="center"
-              className={classes.rowDetailContainer}
-            >
-              <Typography className={classes.rowDetailValue}>
-                {playerRating}
-              </Typography>
-              <Typography className={classes.rowDetailLabel}>Rating</Typography>
-            </Grid>
-          )}
           <Grid
             container
             direction="column"
@@ -107,12 +98,34 @@ const LeagueUserDetailsComponent: React.FunctionComponent<
           {playerData.displayName}
         </Typography>
         {playerData.pdgaNumber && (
-          <Typography
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justifyContent="flex-start"
             onClick={handleNavigateToPDGAProfile}
-            className={classes.pdgaNumberText}
           >
-            #{playerData.pdgaNumber}
-          </Typography>
+            <img
+              src={"/assets/icons/pdgaIcon.ico"}
+              alt=""
+              onClick={() => navigate(`/`)}
+              className={classes.pdgaIcon}
+            />
+            <Typography className={classes.pdgaNumberText}>
+              #{playerData.pdgaNumber}
+            </Typography>
+            {pdgaRating && (
+              <>
+                <FontAwesomeIcon
+                  icon={faRegistered}
+                  className={classes.ratingIcon}
+                />
+                <Typography className={classes.pdgaRatingText}>
+                  {pdgaRating}
+                </Typography>
+              </>
+            )}
+          </Grid>
         )}
         <Grid
           container

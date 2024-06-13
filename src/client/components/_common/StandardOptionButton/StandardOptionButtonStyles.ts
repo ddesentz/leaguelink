@@ -78,7 +78,6 @@ export const standardOptionButtonStyles = makeStyles()((theme: Theme) => ({
   },
   optionText: {
     width: `calc(100% - ${theme.spacing(2)}) !important`,
-    margin: `0 ${theme.spacing(1)}`,
     padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
     boxSizing: "border-box",
     backgroundColor: theme.palette.background.default,
