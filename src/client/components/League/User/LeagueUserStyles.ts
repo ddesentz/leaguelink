@@ -26,8 +26,7 @@ export const leagueUserStyles = makeStyles()((theme: Theme) => ({
     width: "100%",
     height: "100%",
     zIndex: 1,
-    overflowY: "auto",
-    overflowX: "hidden",
+    overflow: "hidden",
     position: "relative",
     [theme.breakpoints.down(310 * 4)]: {
       paddingBottom: theme.spacing(20),
@@ -52,6 +51,8 @@ export const leagueUserStyles = makeStyles()((theme: Theme) => ({
   },
   feedContent: {
     boxSizing: "border-box",
+    height: "100%",
+    width: "100%",
   },
   tabs: {
     width: "100%",

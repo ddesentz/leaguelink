@@ -10,20 +10,27 @@ export const playerPDGAFeedStyles = makeStyles()((theme: Theme) => ({
     overflow: "hidden",
   },
   loading: {
-    display: "flex",
+    display: "block",
     justifyContent: "center",
     alignItems: "center",
     opacity: 0.3,
-    paddingTop: theme.spacing(10),
+    marginTop: theme.spacing(10),
+    width: "100%",
     [theme.breakpoints.up(310 * 4)]: {
-      width: theme.spacing(40),
       height: theme.spacing(40),
       paddingBottom: theme.spacing(20),
     },
     [theme.breakpoints.down(310 * 4)]: {
-      width: theme.spacing(20),
       height: theme.spacing(20),
       paddingBottom: theme.spacing(20),
+    },
+  },
+  autoSizer: {
+    height: "100svw",
+    width: "100svh",
+    "& > div": {
+      overscrollBehavior: "auto",
+      // paddingRight: theme.spacing(4),
     },
   },
 }));

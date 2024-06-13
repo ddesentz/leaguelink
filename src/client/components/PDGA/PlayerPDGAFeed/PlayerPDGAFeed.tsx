@@ -6,10 +6,18 @@ import { app } from "../../../..";
 import { LoadingFull } from "../../../common/rive/LoadingFull";
 import { Grid } from "@mui/material";
 import { PlayerPDGATournamentCard } from "../PlayerPDGATournamentCard/PlayerPDGATournamentCard";
+import { VariableSizeList as List } from "react-window";
+import { useWindowResize } from "../../../hooks/useWindowResize";
+import { AutoSizer } from "react-virtualized";
 
 interface ITournamentSlug {
   tournamentId: string;
   division: string;
+  details: {
+    name: string;
+    tier: string;
+    dates: string;
+  };
 }
 
 interface IPlayerPDGAFeed {
@@ -46,44 +54,108 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
 
   const scrapeUserPDGAData = (html: string) => {
     const $ = cheerio.load(html);
-    const $tournament = $(".tournament > a");
+    const $tournament = $("td.tournament");
     let slugList: ITournamentSlug[] = [];
     $tournament.each((i, el) => {
-      const slug = $(el).attr("href");
+      const tierEl = $(el).next();
+      const datesEl = $(tierEl).next();
+      const slug = $(el).find("a").attr("href");
       const splitId = slug.split("/");
       const tournamentId = splitId[splitId.length - 1];
       const slugs = tournamentId.split("#");
       slugList.push({
         tournamentId: slugs[0],
         division: slugs[1],
+        details: {
+          name: $(el).text(),
+          tier: tierEl.text(),
+          dates: datesEl.text(),
+        },
       } as ITournamentSlug);
     });
+
     setTournamentList(slugList);
   };
+
+  const listRef = React.useRef(null);
+  const innerRef = React.useRef(null);
+
+  const sizeMap = React.useRef({});
+  const setSize = React.useCallback((index, size) => {
+    sizeMap.current = { ...sizeMap.current, [index]: size };
+    listRef.current.resetAfterIndex(index);
+  }, []);
+  const getSize = (index) => sizeMap.current[index] || 50;
+  const [windowWidth] = useWindowResize();
+
+  React.useEffect(() => {});
 
   return (
     <Grid
       container
       direction="column"
-      alignItems="center"
+      alignItems="flex-start"
       justifyContent="flex-start"
       className={classes.playerPDGAFeedContainer}
     >
       {tournamentList === null ? (
         <LoadingFull className={classes.loading} />
       ) : (
-        <>
-          {tournamentList.map((tournament, idx) => (
-            <PlayerPDGATournamentCard
-              key={idx}
-              tournamentId={tournament.tournamentId}
-              division={tournament.division}
-              pdgaNumber={pdgaNumber}
-            />
-          ))}
-        </>
+        <AutoSizer className={classes.autoSizer}>
+          {({ height, width }) => (
+            <List
+              ref={listRef}
+              innerRef={innerRef}
+              height={height}
+              width={width}
+              itemCount={tournamentList.length}
+              itemSize={getSize}
+              itemData={{ list: tournamentList, pdgaNumber: pdgaNumber }}
+              onScroll={({ scrollOffset }) => {
+                const playerContentWrapper = document.getElementById(
+                  "playerContentWrapper"
+                );
+                if (playerContentWrapper) {
+                  playerContentWrapper.scrollTop = scrollOffset;
+                }
+              }}
+            >
+              {({ data, index, style }) => (
+                <div style={style}>
+                  <Row
+                    data={data}
+                    index={index}
+                    setSize={setSize}
+                    windowWidth={windowWidth}
+                  />
+                </div>
+              )}
+            </List>
+          )}
+        </AutoSizer>
       )}
     </Grid>
+  );
+};
+
+const Row = ({ data, index, setSize, windowWidth }) => {
+  const rowRef = React.useRef(null);
+  const tournament = data.list[index];
+
+  React.useEffect(() => {
+    setSize(index, rowRef.current.getBoundingClientRect().height);
+  }, [setSize, index, windowWidth]);
+
+  return (
+    <div ref={rowRef}>
+      <PlayerPDGATournamentCard
+        key={index}
+        tournamentId={tournament.tournamentId}
+        division={tournament.division}
+        pdgaNumber={data.pdgaNumber}
+        details={tournament.details}
+      />
+    </div>
   );
 };
 

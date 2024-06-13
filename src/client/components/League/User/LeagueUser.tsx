@@ -158,7 +158,7 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
   return (
     <div className={classes.leagueUserContainer}>
       <UserBanner playerData={displayUser} teamData={playerTeam} />
-      <div className={classes.contentWrapper}>
+      <div id="playerContentWrapper" className={classes.contentWrapper}>
         <LeagueUserDetails
           playerData={displayUser}
           teamData={playerTeam}
