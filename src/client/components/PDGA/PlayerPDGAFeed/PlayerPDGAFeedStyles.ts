@@ -26,11 +26,22 @@ export const playerPDGAFeedStyles = makeStyles()((theme: Theme) => ({
     },
   },
   autoSizer: {
-    height: "100svw",
+    height: "100%",
     width: "100svh",
     "& > div": {
-      overscrollBehavior: "auto",
-      // paddingRight: theme.spacing(4),
+      "& > div": {
+        [theme.breakpoints.down(310 * 4)]: {
+          paddingBottom: theme.spacing(16),
+        },
+      },
+    },
+  },
+  virtualItemWrapper: {
+    "& > div": {
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     },
   },
 }));

@@ -17,6 +17,7 @@ import { ITeamData } from "../../../common/types/NETC/TeamData";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { PlayerPDGAFeed } from "../../PDGA/PlayerPDGAFeed/PlayerPDGAFeed";
 import * as cheerio from "cheerio";
+import { isMobile } from "react-device-detect";
 
 interface ILeagueUser {}
 
@@ -158,7 +159,11 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
   return (
     <div className={classes.leagueUserContainer}>
       <UserBanner playerData={displayUser} teamData={playerTeam} />
-      <div id="playerContentWrapper" className={classes.contentWrapper}>
+      <div
+        id="playerContentWrapper"
+        style={{ overflow: isMobile ? "auto" : "hidden" }}
+        className={classes.contentWrapper}
+      >
         <LeagueUserDetails
           playerData={displayUser}
           teamData={playerTeam}

@@ -88,7 +88,14 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
   const getSize = (index) => sizeMap.current[index] || 50;
   const [windowWidth] = useWindowResize();
 
-  React.useEffect(() => {});
+  React.useEffect(() => {
+    return () => {
+      const playerContentWrapper = document.getElementById(
+        "playerContentWrapper"
+      );
+      if (playerContentWrapper) playerContentWrapper.scrollTop = 0;
+    };
+  });
 
   return (
     <Grid
@@ -108,6 +115,7 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
               innerRef={innerRef}
               height={height}
               width={width}
+              overscanCount={5}
               itemCount={tournamentList.length}
               itemSize={getSize}
               itemData={{ list: tournamentList, pdgaNumber: pdgaNumber }}
@@ -121,7 +129,7 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
               }}
             >
               {({ data, index, style }) => (
-                <div style={style}>
+                <div style={style} className={classes.virtualItemWrapper}>
                   <Row
                     data={data}
                     index={index}
