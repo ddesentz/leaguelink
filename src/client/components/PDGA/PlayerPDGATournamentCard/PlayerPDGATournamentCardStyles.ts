@@ -8,6 +8,7 @@ export const playerPDGATournamentCardStyles = makeStyles()((theme: Theme) => ({
     justifyContent: "center",
     width: "100%",
     maxWidth: theme.spacing(300),
+    alignSelf: "center",
   },
   playerPDGATournamentCardContainer: {
     width: "100%",

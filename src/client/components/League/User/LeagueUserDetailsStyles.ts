@@ -7,6 +7,8 @@ export const leagueUserDetailsStyles = makeStyles()((theme: Theme) => ({
     display: "flex",
     backgroundColor: theme.palette.background.paper,
     height: "fit-content",
+    position: "relative",
+    zIndex: 100,
     [theme.breakpoints.up(310 * 4)]: {
       padding: `${theme.spacing(4)} ${theme.spacing(16)}`,
     },

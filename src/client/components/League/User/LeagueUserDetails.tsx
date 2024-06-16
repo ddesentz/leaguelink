@@ -41,6 +41,7 @@ const LeagueUserDetailsComponent: React.FunctionComponent<
 
   return (
     <Grid
+      id="playerDetailsContainer"
       container
       direction="column"
       alignItems="center"

@@ -3,9 +3,6 @@ import { playerPDGAFeedStyles } from "./PlayerPDGAFeedStyles";
 import { LoadingFull } from "../../../common/rive/LoadingFull";
 import { Grid } from "@mui/material";
 import { PlayerPDGATournamentCard } from "../PlayerPDGATournamentCard/PlayerPDGATournamentCard";
-import { VariableSizeList as List } from "react-window";
-import { useWindowResize } from "../../../hooks/useWindowResize";
-import { AutoSizer } from "react-virtualized";
 import { IPDGATournamentResult } from "../../../common/types/DiscGolf/PDGA/PDGA";
 
 interface IPlayerPDGAFeed {
@@ -21,19 +18,6 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
 }) => {
   const { classes } = playerPDGAFeedStyles();
 
-  const [windowWidth, windowHeight] = useWindowResize();
-  const listRef = React.useRef(null);
-  const innerRef = React.useRef(null);
-  const sizeMap = React.useRef({});
-  const setSize = React.useCallback(
-    (index, size) => {
-      sizeMap.current = { ...sizeMap.current, [index]: size };
-      listRef.current.resetAfterIndex(index);
-    },
-    [windowHeight]
-  );
-  const getSize = (index) => sizeMap.current[index] || 50;
-
   React.useEffect(() => {
     return () => {
       const playerContentWrapper = document.getElementById(
@@ -42,6 +26,34 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
       if (playerContentWrapper) playerContentWrapper.scrollTop = 0;
     };
   });
+
+  const getScrollContainerStyle = () => {
+    const playerDetailsContainer = document.getElementById(
+      "playerDetailsContainer"
+    );
+    const playerTabOptions = document.getElementById("playerTabOptions");
+    if (playerDetailsContainer && playerTabOptions) {
+      return {
+        paddingTop:
+          playerDetailsContainer.getBoundingClientRect().height +
+          playerTabOptions.getBoundingClientRect().height +
+          64,
+      };
+    }
+    return {
+      paddingTop: 0,
+    };
+  };
+
+  const handleScrollOffset = (e: any) => {
+    const { scrollTop } = e.target;
+    const playerContentWrapper = document.getElementById(
+      "playerContentWrapper"
+    );
+    if (playerContentWrapper) {
+      playerContentWrapper.scrollTop = scrollTop;
+    }
+  };
 
   return (
     <Grid
@@ -54,69 +66,23 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
       {tournamentList === null ? (
         <LoadingFull className={classes.loading} />
       ) : (
-        <AutoSizer className={classes.autoSizer}>
-          {({ height, width }) => (
-            <List
-              ref={listRef}
-              innerRef={innerRef}
-              height={
-                tournamentList.length * 192 < windowHeight
-                  ? Math.min(windowHeight - 376, height)
-                  : height
-              }
-              width={width}
-              overscanCount={3}
-              itemCount={tournamentList.length}
-              itemSize={getSize}
-              itemData={{
-                list: tournamentList,
-                pdgaNumber: pdgaNumber,
-                year: year,
-              }}
-              onScroll={({ scrollOffset }) => {
-                const playerContentWrapper = document.getElementById(
-                  "playerContentWrapper"
-                );
-                if (playerContentWrapper) {
-                  playerContentWrapper.scrollTop = scrollOffset;
-                }
-              }}
-            >
-              {({ data, index, style }) => (
-                <div style={style} className={classes.virtualItemWrapper}>
-                  <Row
-                    data={data}
-                    index={index}
-                    setSize={setSize}
-                    windowWidth={windowWidth}
-                  />
-                </div>
-              )}
-            </List>
-          )}
-        </AutoSizer>
+        <div
+          id="feedScrollContainer"
+          onScroll={handleScrollOffset}
+          style={getScrollContainerStyle()}
+          className={classes.scrollContainer}
+        >
+          {tournamentList.map((tournament, index) => (
+            <PlayerPDGATournamentCard
+              key={index}
+              event={tournament}
+              pdgaNumber={pdgaNumber}
+              year={year}
+            />
+          ))}
+        </div>
       )}
     </Grid>
-  );
-};
-
-const Row = ({ data, index, setSize, windowWidth }) => {
-  const rowRef = React.useRef(null);
-  const tournament = data.list[index];
-
-  React.useEffect(() => {
-    setSize(index, rowRef.current.getBoundingClientRect().height);
-  }, [setSize, index, windowWidth]);
-
-  return (
-    <div ref={rowRef}>
-      <PlayerPDGATournamentCard
-        key={index}
-        event={tournament}
-        pdgaNumber={data.pdgaNumber}
-        year={data.year}
-      />
-    </div>
   );
 };
 

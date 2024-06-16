@@ -6,7 +6,7 @@ export const userBannerStyles = makeStyles()((theme: Theme) => ({
     backgroundColor: theme.palette.background.default,
     color: theme.palette.primary.contrastText,
     backgroundImage: `linear-gradient(${theme.palette.secondary.contrastText}11, ${theme.palette.primary.dark}cc)`,
-    zIndex: 1,
+    zIndex: 100,
     [theme.breakpoints.up(310 * 4)]: {
       paddingLeft: theme.spacing(39),
     },

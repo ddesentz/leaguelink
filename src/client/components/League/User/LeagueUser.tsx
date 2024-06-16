@@ -233,6 +233,7 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
           setSeason={setSeason}
         />
         <Tabs
+          id="playerTabOptions"
           value={selectedTab}
           onChange={handleChange}
           className={classes.tabs}
