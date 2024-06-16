@@ -55,7 +55,8 @@ export const playerPDGATournamentCardStyles = makeStyles()((theme: Theme) => ({
     display: "-webkit-box",
     lineHeight: theme.spacing(5),
     WebkitLineClamp: 3,
-
+    zIndex: 1,
+    position: "relative",
     WebkitBoxOrient: "vertical",
     [theme.breakpoints.up(310 * 4)]: {
       fontSize: theme.spacing(5),
@@ -109,6 +110,8 @@ export const playerPDGATournamentCardStyles = makeStyles()((theme: Theme) => ({
     padding: `${theme.spacing(3)} 0`,
     backgroundColor: theme.palette.background.default,
     backgroundImage: `linear-gradient(225deg, ${theme.palette.background.paper}22, ${theme.palette.info.light}11)`,
+    zIndex: 2,
+    position: "relative",
   },
   placementDetailContainer: {
     flex: 1,

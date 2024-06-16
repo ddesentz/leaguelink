@@ -1,83 +1,26 @@
 import * as React from "react";
 import { playerPDGAFeedStyles } from "./PlayerPDGAFeedStyles";
-import * as cheerio from "cheerio";
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { app } from "../../../..";
 import { LoadingFull } from "../../../common/rive/LoadingFull";
-import { Grid, useMediaQuery } from "@mui/material";
+import { Grid } from "@mui/material";
 import { PlayerPDGATournamentCard } from "../PlayerPDGATournamentCard/PlayerPDGATournamentCard";
 import { VariableSizeList as List } from "react-window";
 import { useWindowResize } from "../../../hooks/useWindowResize";
 import { AutoSizer } from "react-virtualized";
-import { leagueLinkTheme } from "../../../common/Theme";
-
-interface ITournamentSlug {
-  tournamentId: string;
-  division: string;
-  details: {
-    name: string;
-    tier: string;
-    dates: string;
-  };
-}
+import { IPDGATournamentResult } from "../../../common/types/DiscGolf/PDGA/PDGA";
 
 interface IPlayerPDGAFeed {
   pdgaNumber: number;
   year: string;
+  tournamentList: IPDGATournamentResult[] | null;
 }
 
 const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
   pdgaNumber,
   year,
+  tournamentList,
 }) => {
   const { classes } = playerPDGAFeedStyles();
-  const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
-  const functions = getFunctions(app);
-  const [tournamentList, setTournamentList] = React.useState<
-    ITournamentSlug[] | null
-  >(null);
 
-  React.useEffect(() => {
-    if (pdgaNumber) {
-      setTournamentList(null);
-      getPDGADetails(pdgaNumber);
-    }
-  }, [pdgaNumber, year]);
-
-  const getPDGADetails = async (pdgaNumber: number) => {
-    const callableReturnMessage = httpsCallable(functions, "getPlayerPage");
-    callableReturnMessage({
-      pdgaNumber: pdgaNumber,
-      year: year.split("-")[1],
-    }).then((result: any) => {
-      scrapeUserPDGAData(result.data);
-    });
-  };
-
-  const scrapeUserPDGAData = (html: string) => {
-    const $ = cheerio.load(html);
-    const $tournament = $("td.tournament");
-    let slugList: ITournamentSlug[] = [];
-    $tournament.each((i, el) => {
-      const tierEl = $(el).next();
-      const datesEl = $(tierEl).next();
-      const slug = $(el).find("a").attr("href");
-      const splitId = slug.split("/");
-      const tournamentId = splitId[splitId.length - 1];
-      const slugs = tournamentId.split("#");
-      slugList.push({
-        tournamentId: slugs[0],
-        division: slugs[1],
-        details: {
-          name: $(el).text(),
-          tier: tierEl.text(),
-          dates: datesEl.text(),
-        },
-      } as ITournamentSlug);
-    });
-
-    setTournamentList(slugList);
-  };
   const [windowWidth, windowHeight] = useWindowResize();
   const listRef = React.useRef(null);
   const innerRef = React.useRef(null);
@@ -125,7 +68,11 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
               overscanCount={3}
               itemCount={tournamentList.length}
               itemSize={getSize}
-              itemData={{ list: tournamentList, pdgaNumber: pdgaNumber }}
+              itemData={{
+                list: tournamentList,
+                pdgaNumber: pdgaNumber,
+                year: year,
+              }}
               onScroll={({ scrollOffset }) => {
                 const playerContentWrapper = document.getElementById(
                   "playerContentWrapper"
@@ -165,10 +112,9 @@ const Row = ({ data, index, setSize, windowWidth }) => {
     <div ref={rowRef}>
       <PlayerPDGATournamentCard
         key={index}
-        tournamentId={tournament.tournamentId}
-        division={tournament.division}
+        event={tournament}
         pdgaNumber={data.pdgaNumber}
-        details={tournament.details}
+        year={data.year}
       />
     </div>
   );

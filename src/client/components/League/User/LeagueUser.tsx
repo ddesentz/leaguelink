@@ -2,7 +2,14 @@ import * as React from "react";
 import { leagueUserStyles } from "./LeagueUserStyles";
 import { UserBanner } from "../../_common/UserBanner/UserBanner";
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  setDoc,
+} from "firebase/firestore";
 import { app, db } from "../../../..";
 import { useParams } from "react-router";
 import { getLocalStorage } from "../../../hooks/useLocalStorage";
@@ -18,6 +25,8 @@ import { getFunctions, httpsCallable } from "firebase/functions";
 import { PlayerPDGAFeed } from "../../PDGA/PlayerPDGAFeed/PlayerPDGAFeed";
 import * as cheerio from "cheerio";
 import { isMobile } from "react-device-detect";
+import { scrapeUserPDGAData } from "../../../common/Helper/HelperFunctions";
+import { IPDGATournamentResult } from "../../../common/types/DiscGolf/PDGA/PDGA";
 
 interface ILeagueUser {}
 
@@ -35,8 +44,14 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
     null
   );
   const [noUser, setNoUser] = React.useState<boolean>(false);
-  const [selectedTab, setSelectedTab] = React.useState<string>("PDGA");
+  const [selectedTab, setSelectedTab] = React.useState<string>("Stats");
   const [season, setSeason] = React.useState<string>("2023-2024");
+  const [pdgaScrapeList, setPDGAScrapeList] = React.useState<
+    IPDGATournamentResult[] | null
+  >(null);
+  const [pdgaTournamentList, setPDGATournamentList] = React.useState<
+    IPDGATournamentResult[] | null
+  >(null);
 
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -67,6 +82,52 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
     };
   }, [params.userId]);
 
+  React.useEffect(() => {
+    if (displayUser?.pdgaNumber) {
+      getPDGADetails(displayUser.pdgaNumber, season.split("-")[1]);
+    }
+  }, [displayUser?.pdgaNumber, season]);
+
+  React.useEffect(() => {
+    if (pdgaScrapeList) {
+      const q = query(
+        collection(
+          db,
+          `leagues/${league.id}/players/${params.userId}/pdgaEvents/year/${season.split("-")[1]}`
+        )
+      );
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        setPDGATournamentList(
+          snapshot.docs.map((doc) => doc.data()) as IPDGATournamentResult[]
+        );
+        const events = [];
+        snapshot.forEach((doc) => {
+          events.push(doc.id);
+        });
+
+        const newEvents = pdgaScrapeList.filter(
+          (pdgaEvent) => !events.includes(pdgaEvent.tournamentId)
+        );
+        newEvents.forEach((event) => {
+          setDoc(
+            doc(
+              db,
+              `leagues/${league.id}/players/${params.userId}/pdgaEvents/year/${season.split("-")[1]}`,
+              event.tournamentId
+            ),
+            event
+          );
+        });
+      });
+
+      return () => {
+        unsubscribe();
+        setPDGATournamentList(null);
+      };
+    }
+  }, [pdgaScrapeList]);
+
   const getTeam = async (teamId: string) => {
     await getDoc(doc(db, `leagues/${params.leagueId}/teams`, teamId)).then(
       (doc) => {
@@ -77,30 +138,26 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
     );
   };
 
-  React.useEffect(() => {
-    if (displayUser?.pdgaNumber) {
-      getPlayerRating(displayUser.pdgaNumber);
-    }
-  }, [displayUser?.pdgaNumber]);
-
-  const getPlayerRating = async (pdgaNumber: number) => {
+  const getPDGADetails = async (pdgaNumber: number, year: string) => {
+    setPDGATournamentList(null);
     const callableReturnMessage = httpsCallable(functions, "getPlayerPage");
     callableReturnMessage({
       pdgaNumber: pdgaNumber,
-      year: season.split("-")[1],
+      year: year,
     }).then((result: any) => {
       const $ = cheerio.load(result.data);
       const currentRating = $(".current-rating").text();
       if (currentRating) {
         setPDGARating(currentRating.split(":")[1].trim().split(" ")[0]);
-        return;
+      } else {
+        const membershipStatus = $(".membership-status").text();
+        if (membershipStatus) {
+          setPDGARating("Expired");
+        } else {
+          setPDGARating(null);
+        }
       }
-      const membershipStatus = $(".membership-status").text();
-      if (membershipStatus) {
-        setPDGARating("Expired");
-        return;
-      }
-      setPDGARating(null);
+      setPDGAScrapeList(scrapeUserPDGAData(result.data, year));
     });
   };
 
@@ -131,7 +188,11 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
         return <div>Matches</div>;
       case "PDGA":
         return (
-          <PlayerPDGAFeed pdgaNumber={displayUser.pdgaNumber} year={season} />
+          <PlayerPDGAFeed
+            pdgaNumber={displayUser.pdgaNumber}
+            year={season.split("-")[1]}
+            tournamentList={pdgaTournamentList}
+          />
         );
     }
   };
@@ -191,12 +252,14 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
             disableRipple
             className={classes.tab}
           />
-          <Tab
-            label="PDGA"
-            value={"PDGA"}
-            disableRipple
-            className={classes.tab}
-          />
+          {displayUser && displayUser.pdgaNumber && (
+            <Tab
+              label="PDGA"
+              value={"PDGA"}
+              disableRipple
+              className={classes.tab}
+            />
+          )}
         </Tabs>
         <div className={classes.feedContent}>{renderFeed()}</div>
       </div>

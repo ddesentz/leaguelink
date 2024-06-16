@@ -1,7 +1,7 @@
 import * as React from "react";
 import { playerPDGATournamentCardStyles } from "./PlayerPDGATournamentCardStyles";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { app } from "../../../..";
+import { app, db } from "../../../..";
 import { Grid, Typography } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,29 +11,32 @@ import {
   faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
 import { leagueLinkTheme } from "../../../common/Theme";
+import {
+  IPDGAPlayerResult,
+  IPDGATournamentResult,
+} from "../../../common/types/DiscGolf/PDGA/PDGA";
+import { doc, setDoc } from "firebase/firestore";
+import { useParams } from "react-router-dom";
 
 interface IPlayerPDGATournamentCard {
-  tournamentId: string;
-  division: string;
-  details: {
-    name: string;
-    tier: string;
-    dates: string;
-  };
+  event: IPDGATournamentResult;
   pdgaNumber: number;
+  year: string;
 }
 
 const PlayerPDGATournamentCardComponent: React.FunctionComponent<
   IPlayerPDGATournamentCard
-> = ({ tournamentId, division, details, pdgaNumber }) => {
+> = ({ event, pdgaNumber, year }) => {
   const { classes } = playerPDGATournamentCardStyles();
   const functions = getFunctions(app);
-  const [playerResults, setPlayerResults] = React.useState<any | null>(null);
+  const params = useParams();
   const [isLeague, setIsLeague] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    getPDGADetails();
-  }, [tournamentId, division, pdgaNumber]);
+    if (!event.playerResults) {
+      getPDGADetails();
+    }
+  }, [event]);
 
   const getPDGADetails = async () => {
     const callableReturnMessage = httpsCallable(
@@ -41,8 +44,8 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
       "getPlayerPDGATournamentDetails"
     );
     callableReturnMessage({
-      tournamentId: tournamentId,
-      division: division,
+      tournamentId: event.tournamentId,
+      division: event.division,
     }).then((result: any) => {
       if (Array.isArray(result.data)) {
         result.data.forEach((pool: any, index: number) => {
@@ -61,8 +64,6 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
         if (playerData) {
           getPlayerResult(Number(playerData.ResultID));
         } else {
-          // Handle League data
-          // TODO: Get round of League Played
           setIsLeague(true);
         }
       }
@@ -77,13 +78,32 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
     callableReturnMessage({
       resultId: resultId,
     }).then((result: any) => {
-      setPlayerResults(result.data);
+      const playerResult: IPDGAPlayerResult = {
+        ResultID: result.data.ResultID,
+        Place: result.data.Place,
+        Rating: result.data.Rating,
+        TierLetter: result.data.TierLetter,
+        ToParString: result.data.ToParString,
+        RatingDiff: result.data.RatingDiff,
+        AverageRoundRating: result.data.AverageRoundRating,
+        Division: result.data.Division,
+        DNF: result.data.DNF,
+        Scores: result.data.Scores,
+      };
+      setDoc(
+        doc(
+          db,
+          `leagues/${params.leagueId}/players/${params.userId}/pdgaEvents/year/${year}`,
+          event.tournamentId
+        ),
+        { ...event, isLeague: isLeague, playerResults: playerResult }
+      );
     });
   };
 
   const handleExpand = () => {
     window.open(
-      `https://www.pdga.com/apps/tournament/live/event?eventId=${tournamentId}&division=${division}`,
+      `https://www.pdga.com/apps/tournament/live/event?eventId=${event.tournamentId}&division=${event.division}`,
       "_blank"
     );
   };
@@ -91,17 +111,17 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
   const renderTier = () => {
     let tierString = "";
 
-    if (isLeague)
+    if (event.isLeague)
       return (
         <Typography component={"span"} className={classes.tierText}>
           League
         </Typography>
       );
-    if (!playerResults) return <></>;
+    if (!event.playerResults) return <></>;
 
-    if (playerResults.TierLetter.length === 1) {
-      tierString = playerResults.TierLetter + " Tier";
-    } else tierString = playerResults.TierLetter;
+    if (event.playerResults.TierLetter.length === 1) {
+      tierString = event.playerResults.TierLetter + " Tier";
+    } else tierString = event.playerResults.TierLetter;
 
     return (
       <Typography component={"span"} className={classes.tierText}>
@@ -111,30 +131,22 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
   };
 
   const renderDates = () => {
-    let dateString = "";
-    const splitDates = details.dates.split("-");
-
-    if (splitDates.length === 3) {
-      const monthNum = new Date(Date.parse(details.dates)).getMonth() + 1;
-      dateString = `${monthNum}/${splitDates[0]}/${splitDates[2]}`;
-    } else {
-      const dates = details.dates.split(" to ");
-      const dateList = dates.map((date) => {
-        return new Date(Date.parse(date));
-      });
-      dateString = `${dateList[0].getMonth() + 1}/${dateList[0].getDate()} - ${dateList[1].getMonth() + 1}/${dateList[1].getDate()}/${dateList[1].getFullYear()}`;
-    }
+    const startDate = new Date(event.details.startDate);
+    const endDate = new Date(event.details.endDate);
     return (
       <Typography component={"span"} className={classes.tournamentDateText}>
         <FontAwesomeIcon icon={faCalendarDay} className={classes.dateIcon} />
-        {dateString}
+        {startDate.getMonth() + 1}/{startDate.getDate()}
+        {startDate.valueOf() === endDate.valueOf()
+          ? `/${startDate.getFullYear()}`
+          : ` - ${endDate.getMonth() + 1}/${endDate.getDate()}/${endDate.getFullYear()}`}
       </Typography>
     );
   };
 
   const renderPlacement = () => {
     let color = "";
-    switch (playerResults?.Place) {
+    switch (event.playerResults?.Place) {
       case 1:
         color = "#FFD700";
         break;
@@ -153,8 +165,8 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
         style={{ color: color }}
         className={classes.placementDetailValue}
       >
-        {playerResults ? playerResults.Place : ""}{" "}
-        {playerResults && playerResults.Place <= 3 && (
+        {event.playerResults ? event.playerResults.Place : ""}{" "}
+        {event.playerResults && event.playerResults.Place <= 3 && (
           <FontAwesomeIcon
             icon={faTrophy}
             style={{ color: color, marginLeft: leagueLinkTheme.spacing(2) }}
@@ -170,7 +182,7 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
         style={{ color: leagueLinkTheme.palette.primary.contrastText }}
         className={classes.placementDetailValue}
       >
-        {playerResults?.ToParString}
+        {event.playerResults?.ToParString}
       </Typography>
     );
   };
@@ -180,23 +192,23 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
     let rating = "";
     let ratingDiff = "";
 
-    if (playerResults?.ToParString === "DNF") {
+    if (event.playerResults?.ToParString === "DNF") {
       style = {
         color: leagueLinkTheme.palette.primary.contrastText,
       };
       rating = "DNF";
-    } else if (playerResults?.RatingDiff > 0) {
+    } else if (event.playerResults?.RatingDiff > 0) {
       style = {
         color: "#008E6F",
       };
-      rating = playerResults?.AverageRoundRating;
-      ratingDiff = playerResults?.RatingDiff;
+      rating = event.playerResults?.AverageRoundRating.toString();
+      ratingDiff = event.playerResults?.RatingDiff.toString();
     } else {
       style = {
         color: "#DC2736",
       };
-      rating = playerResults?.AverageRoundRating;
-      ratingDiff = playerResults?.RatingDiff;
+      rating = event.playerResults?.AverageRoundRating.toString();
+      ratingDiff = event.playerResults?.RatingDiff.toString();
     }
 
     return (
@@ -205,7 +217,9 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
         {ratingDiff && (
           <Typography style={style}>
             <FontAwesomeIcon
-              icon={playerResults.RatingDiff < 0 ? faCaretDown : faCaretUp}
+              icon={
+                event.playerResults.RatingDiff < 0 ? faCaretDown : faCaretUp
+              }
               style={style}
               className={classes.ratingDiffIcon}
             />
@@ -237,7 +251,7 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
         >
           <div className={classes.tournamentNameWrapper}>
             <Typography className={classes.tournamentNameText}>
-              {details.name}
+              {event.details.name}
             </Typography>
           </div>
           <Grid
@@ -251,7 +265,7 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
             {renderDates()}
           </Grid>
         </Grid>
-        {!isLeague && (
+        {!event.isLeague && (
           <Grid
             container
             direction="row"
@@ -268,7 +282,7 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
             >
               {renderPlacement()}
               <Typography className={classes.placementDetailLabel}>
-                {playerResults ? playerResults.Division : ""}
+                {event.playerResults ? event.playerResults.Division : ""}
               </Typography>
             </Grid>
             <Grid
