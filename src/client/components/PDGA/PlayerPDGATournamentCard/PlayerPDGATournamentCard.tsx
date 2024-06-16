@@ -4,7 +4,12 @@ import { getFunctions, httpsCallable } from "firebase/functions";
 import { app } from "../../../..";
 import { Grid, Typography } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarDay, faTrophy } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarDay,
+  faCaretDown,
+  faCaretUp,
+  faTrophy,
+} from "@fortawesome/free-solid-svg-icons";
 import { leagueLinkTheme } from "../../../common/Theme";
 
 interface IPlayerPDGATournamentCard {
@@ -24,6 +29,7 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
   const { classes } = playerPDGATournamentCardStyles();
   const functions = getFunctions(app);
   const [playerResults, setPlayerResults] = React.useState<any | null>(null);
+  const [isLeague, setIsLeague] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     getPDGADetails();
@@ -38,11 +44,27 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
       tournamentId: tournamentId,
       division: division,
     }).then((result: any) => {
-      const playerData = result.data.scores.find(
-        (score: any) => Number(score.PDGANum) === Number(pdgaNumber)
-      );
-      if (playerData) {
-        getPlayerResult(Number(playerData.ResultID));
+      if (Array.isArray(result.data)) {
+        result.data.forEach((pool: any, index: number) => {
+          const playerData = result.data[index].scores.find(
+            (score: any) => Number(score.PDGANum) === Number(pdgaNumber)
+          );
+          if (playerData) {
+            getPlayerResult(Number(playerData.ResultID));
+            return;
+          }
+        });
+      } else {
+        const playerData = result.data.scores.find(
+          (score: any) => Number(score.PDGANum) === Number(pdgaNumber)
+        );
+        if (playerData) {
+          getPlayerResult(Number(playerData.ResultID));
+        } else {
+          // Handle League data
+          // TODO: Get round of League Played
+          setIsLeague(true);
+        }
       }
     });
   };
@@ -55,7 +77,6 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
     callableReturnMessage({
       resultId: resultId,
     }).then((result: any) => {
-      //   console.log(result.data);
       setPlayerResults(result.data);
     });
   };
@@ -67,9 +88,32 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
     );
   };
 
+  const renderTier = () => {
+    let tierString = "";
+
+    if (isLeague)
+      return (
+        <Typography component={"span"} className={classes.tierText}>
+          League
+        </Typography>
+      );
+    if (!playerResults) return <></>;
+
+    if (playerResults.TierLetter.length === 1) {
+      tierString = playerResults.TierLetter + " Tier";
+    } else tierString = playerResults.TierLetter;
+
+    return (
+      <Typography component={"span"} className={classes.tierText}>
+        {tierString}
+      </Typography>
+    );
+  };
+
   const renderDates = () => {
     let dateString = "";
     const splitDates = details.dates.split("-");
+
     if (splitDates.length === 3) {
       const monthNum = new Date(Date.parse(details.dates)).getMonth() + 1;
       dateString = `${monthNum}/${splitDates[0]}/${splitDates[2]}`;
@@ -101,7 +145,7 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
         color = "#CD7F32";
         break;
       default:
-        color = leagueLinkTheme.palette.info.light;
+        color = leagueLinkTheme.palette.primary.contrastText;
         break;
     }
     return (
@@ -121,27 +165,53 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
   };
 
   const renderTotal = () => {
+    return (
+      <Typography
+        style={{ color: leagueLinkTheme.palette.primary.contrastText }}
+        className={classes.placementDetailValue}
+      >
+        {playerResults?.ToParString}
+      </Typography>
+    );
+  };
+
+  const renderEventAvg = () => {
     let style = {};
-    if (playerResults?.ToPar < 0)
+    let rating = "";
+    let ratingDiff = "";
+
+    if (playerResults?.ToParString === "DNF") {
       style = {
-        borderRadius: "50%",
-        backgroundColor: "#008E6F",
-        width: leagueLinkTheme.spacing(10),
-        height: leagueLinkTheme.spacing(10),
-        fontSize: leagueLinkTheme.spacing(5),
+        color: leagueLinkTheme.palette.primary.contrastText,
       };
-    if (playerResults?.ToPar > 0)
+      rating = "DNF";
+    } else if (playerResults?.RatingDiff > 0) {
       style = {
-        borderRadius: "4px",
-        backgroundColor: "#DC2736",
-        width: leagueLinkTheme.spacing(10),
-        height: leagueLinkTheme.spacing(10),
-        fontSize: leagueLinkTheme.spacing(5),
+        color: "#008E6F",
       };
+      rating = playerResults?.AverageRoundRating;
+      ratingDiff = playerResults?.RatingDiff;
+    } else {
+      style = {
+        color: "#DC2736",
+      };
+      rating = playerResults?.AverageRoundRating;
+      ratingDiff = playerResults?.RatingDiff;
+    }
 
     return (
-      <Typography style={style} className={classes.placementDetailValue}>
-        {playerResults ? playerResults.ToPar : ""}
+      <Typography className={classes.placementDetailValue} component="span">
+        {rating}
+        {ratingDiff && (
+          <Typography style={style}>
+            <FontAwesomeIcon
+              icon={playerResults.RatingDiff < 0 ? faCaretDown : faCaretUp}
+              style={style}
+              className={classes.ratingDiffIcon}
+            />
+            {ratingDiff}
+          </Typography>
+        )}
       </Typography>
     );
   };
@@ -177,58 +247,56 @@ const PlayerPDGATournamentCardComponent: React.FunctionComponent<
             justifyContent="space-between"
             className={classes.rightItemsContainer}
           >
-            <Typography component={"span"} className={classes.tierText}>
-              {details.tier} Tier
-            </Typography>
+            {renderTier()}
             {renderDates()}
           </Grid>
         </Grid>
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-          className={classes.placementWrapper}
-        >
+        {!isLeague && (
           <Grid
             container
-            direction="column"
+            direction="row"
             alignItems="center"
-            justifyContent="space-around"
-            className={classes.placementDetailContainer}
+            justifyContent="center"
+            className={classes.placementWrapper}
           >
-            {renderPlacement()}
-            <Typography className={classes.placementDetailLabel}>
-              {playerResults ? playerResults.Division : ""}
-            </Typography>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justifyContent="space-around"
+              className={classes.placementDetailContainer}
+            >
+              {renderPlacement()}
+              <Typography className={classes.placementDetailLabel}>
+                {playerResults ? playerResults.Division : ""}
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justifyContent="space-around"
+              className={classes.placementDetailContainer}
+            >
+              {renderTotal()}
+              <Typography className={classes.placementDetailLabel}>
+                Total
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justifyContent="space-around"
+              className={classes.placementDetailContainer}
+            >
+              {renderEventAvg()}
+              <Typography className={classes.placementDetailLabel}>
+                Event
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justifyContent="space-around"
-            className={classes.placementDetailContainer}
-          >
-            {renderTotal()}
-            <Typography className={classes.placementDetailLabel}>
-              Total
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justifyContent="space-around"
-            className={classes.placementDetailContainer}
-          >
-            <Typography className={classes.placementDetailValue}>
-              {playerResults ? playerResults.AverageRoundRating : ""}
-            </Typography>
-            <Typography className={classes.placementDetailLabel}>
-              Event
-            </Typography>
-          </Grid>
-        </Grid>
+        )}
       </Grid>
     </div>
   );

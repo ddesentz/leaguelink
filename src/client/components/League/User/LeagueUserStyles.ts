@@ -27,6 +27,7 @@ export const leagueUserStyles = makeStyles()((theme: Theme) => ({
     height: "100%",
     zIndex: 1,
     position: "relative",
+    overflow: "hidden",
     [theme.breakpoints.down(310 * 4)]: {
       paddingBottom: theme.spacing(20),
     },

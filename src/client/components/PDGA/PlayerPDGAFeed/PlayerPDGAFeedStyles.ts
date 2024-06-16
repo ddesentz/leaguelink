@@ -26,12 +26,13 @@ export const playerPDGAFeedStyles = makeStyles()((theme: Theme) => ({
     },
   },
   autoSizer: {
-    height: "100%",
-    width: "100svh",
+    height: "100svh",
+    width: "100svw",
     "& > div": {
       "& > div": {
+        paddingBottom: theme.spacing(4),
         [theme.breakpoints.down(310 * 4)]: {
-          paddingBottom: theme.spacing(16),
+          paddingBottom: theme.spacing(20),
         },
       },
     },

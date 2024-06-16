@@ -4,11 +4,12 @@ import * as cheerio from "cheerio";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { app } from "../../../..";
 import { LoadingFull } from "../../../common/rive/LoadingFull";
-import { Grid } from "@mui/material";
+import { Grid, useMediaQuery } from "@mui/material";
 import { PlayerPDGATournamentCard } from "../PlayerPDGATournamentCard/PlayerPDGATournamentCard";
 import { VariableSizeList as List } from "react-window";
 import { useWindowResize } from "../../../hooks/useWindowResize";
 import { AutoSizer } from "react-virtualized";
+import { leagueLinkTheme } from "../../../common/Theme";
 
 interface ITournamentSlug {
   tournamentId: string;
@@ -30,6 +31,7 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
   year,
 }) => {
   const { classes } = playerPDGAFeedStyles();
+  const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
   const functions = getFunctions(app);
   const [tournamentList, setTournamentList] = React.useState<
     ITournamentSlug[] | null
@@ -76,17 +78,18 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
 
     setTournamentList(slugList);
   };
-
+  const [windowWidth, windowHeight] = useWindowResize();
   const listRef = React.useRef(null);
   const innerRef = React.useRef(null);
-
   const sizeMap = React.useRef({});
-  const setSize = React.useCallback((index, size) => {
-    sizeMap.current = { ...sizeMap.current, [index]: size };
-    listRef.current.resetAfterIndex(index);
-  }, []);
+  const setSize = React.useCallback(
+    (index, size) => {
+      sizeMap.current = { ...sizeMap.current, [index]: size };
+      listRef.current.resetAfterIndex(index);
+    },
+    [windowHeight]
+  );
   const getSize = (index) => sizeMap.current[index] || 50;
-  const [windowWidth] = useWindowResize();
 
   React.useEffect(() => {
     return () => {
@@ -113,9 +116,13 @@ const PlayerPDGAFeedComponent: React.FunctionComponent<IPlayerPDGAFeed> = ({
             <List
               ref={listRef}
               innerRef={innerRef}
-              height={height}
+              height={
+                tournamentList.length * 192 < windowHeight
+                  ? Math.min(windowHeight - 376, height)
+                  : height
+              }
               width={width}
-              overscanCount={5}
+              overscanCount={3}
               itemCount={tournamentList.length}
               itemSize={getSize}
               itemData={{ list: tournamentList, pdgaNumber: pdgaNumber }}

@@ -21,6 +21,7 @@ export const playerPDGATournamentCardStyles = makeStyles()((theme: Theme) => ({
     margin: `${theme.spacing(2)} ${theme.spacing(2)}`,
     cursor: "pointer",
     overflow: "hidden",
+    boxShadow: `0 4px 8px 2px ${theme.palette.secondary.contrastText}AA`,
   },
   tournamentDetailContainer: {
     boxSizing: "content-box",
@@ -28,13 +29,13 @@ export const playerPDGATournamentCardStyles = makeStyles()((theme: Theme) => ({
     borderBottomRightRadius: 0,
     height: theme.spacing(18),
     backgroundColor: theme.palette.primary.dark,
-    backgroundImage: `linear-gradient(45deg, ${theme.palette.primary.contrastText}11, ${theme.palette.primary.main}66)`,
+    backgroundImage: `linear-gradient(45deg, ${theme.palette.primary.contrastText}44, ${theme.palette.primary.main}66)`,
     boxShadow: `0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)`,
   },
   tournamentNameWrapper: {
     display: "flex",
     background: theme.palette.background.paper,
-    backgroundImage: `linear-gradient(45deg, ${theme.palette.primary.light}11, ${theme.palette.background.paper}44)`,
+    backgroundImage: `linear-gradient(45deg, ${theme.palette.primary.light}44, ${theme.palette.background.paper}44)`,
     transformOrigin: "100% 0",
     transform: "skew(-45deg)",
     zIndex: 1,
@@ -54,6 +55,7 @@ export const playerPDGATournamentCardStyles = makeStyles()((theme: Theme) => ({
     display: "-webkit-box",
     lineHeight: theme.spacing(5),
     WebkitLineClamp: 3,
+
     WebkitBoxOrient: "vertical",
     [theme.breakpoints.up(310 * 4)]: {
       fontSize: theme.spacing(5),
@@ -104,17 +106,16 @@ export const playerPDGATournamentCardStyles = makeStyles()((theme: Theme) => ({
     },
   },
   placementWrapper: {
-    borderTop: `2px solid ${theme.palette.primary.light}33`,
     padding: `${theme.spacing(3)} 0`,
-    backgroundColor: theme.palette.background.paper,
-    // backgroundImage: `linear-gradient( ${theme.palette.primary.contrastText}11, ${theme.palette.background.paper}11)`,
+    backgroundColor: theme.palette.background.default,
+    backgroundImage: `linear-gradient(225deg, ${theme.palette.background.paper}22, ${theme.palette.info.light}11)`,
   },
   placementDetailContainer: {
     flex: 1,
     height: theme.spacing(20),
   },
   placementDetailValue: {
-    color: theme.palette.info.light,
+    color: theme.palette.primary.contrastText,
     fontWeight: "bold",
     height: theme.spacing(12),
     display: "flex",
@@ -136,5 +137,8 @@ export const playerPDGATournamentCardStyles = makeStyles()((theme: Theme) => ({
     [theme.breakpoints.down(310 * 4)]: {
       fontSize: theme.spacing(3),
     },
+  },
+  ratingDiffIcon: {
+    marginLeft: theme.spacing(2),
   },
 }));
