@@ -5,4 +5,5 @@ export interface IPlayerData {
   photoURL: string;
   teamId?: string;
   pdgaNumber?: number;
+  location?: string;
 }

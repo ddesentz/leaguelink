@@ -8,19 +8,23 @@ import { IPlayerData } from "../../../common/types/NETC/PlayerData";
 import { ITeamData } from "../../../common/types/NETC/TeamData";
 import { useDarkContrast } from "../../../common/Helper/HelperFunctions";
 import { leagueLinkTheme } from "../../../common/Theme";
+import { useAppSignals } from "../../../common/AppContext";
 
 interface IUserBanner {
   playerData: IPlayerData;
   teamData: ITeamData | null;
   displayBackButton?: boolean;
+  isEditing?: boolean;
 }
 
 const UserBannerComponent: React.FunctionComponent<IUserBanner> = ({
   playerData,
   teamData,
   displayBackButton,
+  isEditing,
 }) => {
   const { classes } = userBannerStyles();
+  const { playerSignals } = useAppSignals();
   const navigate = useNavigate();
   const useDark = useDarkContrast(
     teamData ? teamData.teamColor : leagueLinkTheme.palette.background.default
@@ -35,7 +39,7 @@ const UserBannerComponent: React.FunctionComponent<IUserBanner> = ({
   };
 
   const handleBack = () => {
-    navigate(-1);
+    isEditing ? (playerSignals.editingPlayer.value = null) : navigate(-1);
   };
 
   return (
@@ -79,6 +83,7 @@ const UserBannerComponent: React.FunctionComponent<IUserBanner> = ({
 
 UserBannerComponent.defaultProps = {
   displayBackButton: true,
+  isEditing: false,
 };
 
 export const UserBanner = UserBannerComponent;

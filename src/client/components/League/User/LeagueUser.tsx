@@ -7,6 +7,7 @@ import {
   doc,
   getDoc,
   onSnapshot,
+  orderBy,
   query,
   setDoc,
 } from "firebase/firestore";
@@ -27,6 +28,8 @@ import * as cheerio from "cheerio";
 import { isMobile } from "react-device-detect";
 import { scrapeUserPDGAData } from "../../../common/Helper/HelperFunctions";
 import { IPDGATournamentResult } from "../../../common/types/DiscGolf/PDGA/PDGA";
+import { EditPlayer } from "../../../pages/Edit/Player/EditPlayer";
+import { useAppSignals } from "../../../common/AppContext";
 
 interface ILeagueUser {}
 
@@ -35,6 +38,8 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
   const auth = getAuth();
   const params = useParams();
   const functions = getFunctions(app);
+  const { playerSignals } = useAppSignals();
+  const { editingPlayer } = playerSignals;
   const league = getLocalStorage("selectedLeague");
   const [displayUser, setDisplayUser] = React.useState<IPlayerData | null>(
     null
@@ -67,6 +72,7 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
               }
             } else {
               const playerData = snapshot.data() as IPlayerData;
+              console.log(playerData);
               if (playerData.teamId) {
                 getTeam(playerData.teamId);
               }
@@ -94,7 +100,8 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
         collection(
           db,
           `leagues/${league.id}/players/${params.userId}/pdgaEvents/year/${season.split("-")[1]}`
-        )
+        ),
+        orderBy("details.endDate", "desc")
       );
 
       const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -219,51 +226,64 @@ const LeagueUserComponent: React.FunctionComponent<ILeagueUser> = () => {
     );
   return (
     <div className={classes.leagueUserContainer}>
-      <UserBanner playerData={displayUser} teamData={playerTeam} />
-      <div
-        id="playerContentWrapper"
-        style={{ overflow: isMobile ? "auto" : "hidden" }}
-        className={classes.contentWrapper}
-      >
-        <LeagueUserDetails
-          playerData={displayUser}
-          teamData={playerTeam}
-          pdgaRating={pdgaRating}
-          season={season}
-          setSeason={setSeason}
-        />
-        <Tabs
-          id="playerTabOptions"
-          value={selectedTab}
-          onChange={handleChange}
-          className={classes.tabs}
-          TabIndicatorProps={{
-            className: classes.tabIndicator,
-          }}
-        >
-          <Tab
-            label="Stats"
-            value={"Stats"}
-            disableRipple
-            className={classes.tab}
+      {editingPlayer.value ? (
+        <>
+          <UserBanner
+            playerData={editingPlayer.value}
+            teamData={playerTeam}
+            isEditing={true}
           />
-          <Tab
-            label={"Matches"}
-            value={"Matches"}
-            disableRipple
-            className={classes.tab}
-          />
-          {displayUser && displayUser.pdgaNumber && (
-            <Tab
-              label="PDGA"
-              value={"PDGA"}
-              disableRipple
-              className={classes.tab}
+          <EditPlayer />
+        </>
+      ) : (
+        <>
+          <UserBanner playerData={displayUser} teamData={playerTeam} />
+          <div
+            id="playerContentWrapper"
+            style={{ overflow: isMobile ? "auto" : "hidden" }}
+            className={classes.contentWrapper}
+          >
+            <LeagueUserDetails
+              playerData={displayUser}
+              teamData={playerTeam}
+              pdgaRating={pdgaRating}
+              season={season}
+              setSeason={setSeason}
             />
-          )}
-        </Tabs>
-        <div className={classes.feedContent}>{renderFeed()}</div>
-      </div>
+            <Tabs
+              id="playerTabOptions"
+              value={selectedTab}
+              onChange={handleChange}
+              className={classes.tabs}
+              TabIndicatorProps={{
+                className: classes.tabIndicator,
+              }}
+            >
+              <Tab
+                label="Stats"
+                value={"Stats"}
+                disableRipple
+                className={classes.tab}
+              />
+              <Tab
+                label={"Matches"}
+                value={"Matches"}
+                disableRipple
+                className={classes.tab}
+              />
+              {displayUser && displayUser.pdgaNumber && (
+                <Tab
+                  label="PDGA"
+                  value={"PDGA"}
+                  disableRipple
+                  className={classes.tab}
+                />
+              )}
+            </Tabs>
+            <div className={classes.feedContent}>{renderFeed()}</div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

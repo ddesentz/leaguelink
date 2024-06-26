@@ -127,6 +127,27 @@ export const leagueExploreStyles = makeStyles()((theme: Theme) => ({
       padding: theme.spacing(1),
     },
   },
+  pdgaIcon: {
+    [theme.breakpoints.up(310 * 4)]: {
+      height: theme.spacing(4),
+      marginRight: theme.spacing(2),
+    },
+    [theme.breakpoints.down(310 * 4)]: {
+      height: theme.spacing(3),
+      marginRight: theme.spacing(1),
+    },
+  },
+  playerAvatar: {
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+    cursor: "pointer",
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(3),
+    "& > img": {
+      objectFit: "contain",
+      boxSizing: "border-box",
+    },
+  },
   teamNameText: {
     color: theme.palette.primary.contrastText,
     fontWeight: "bold",
@@ -149,6 +170,7 @@ export const leagueExploreStyles = makeStyles()((theme: Theme) => ({
   },
   courseItemLocationIcon: {
     color: theme.palette.primary.light,
+    paddingLeft: theme.spacing(0.5),
     [theme.breakpoints.up(310 * 4)]: {
       height: theme.spacing(4),
       marginRight: theme.spacing(2),

@@ -9,6 +9,8 @@ import { ITeamData } from "../../../common/types/NETC/TeamData";
 import { useNavigate, useParams } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRegistered } from "@fortawesome/free-solid-svg-icons";
+import { useAppSignals } from "../../../common/AppContext";
+import { auth } from "../../../..";
 
 interface ILeagueUserDetails {
   playerData: IPlayerData;
@@ -22,8 +24,9 @@ const LeagueUserDetailsComponent: React.FunctionComponent<
   ILeagueUserDetails
 > = ({ playerData, teamData, pdgaRating, season, setSeason }) => {
   const { classes } = leagueUserDetailsStyles();
+  const { playerSignals } = useAppSignals();
   const navigate = useNavigate();
-  const { leagueId } = useParams();
+  const { leagueId, userId } = useParams();
   const isMobile = useMediaQuery(leagueLinkTheme.breakpoints.down(310 * 4));
 
   const handleNavigateToTeamPage = () => {
@@ -109,7 +112,6 @@ const LeagueUserDetailsComponent: React.FunctionComponent<
             <img
               src={"/assets/icons/pdgaIcon.ico"}
               alt=""
-              onClick={() => navigate(`/`)}
               className={classes.pdgaIcon}
             />
             <Typography className={classes.pdgaNumberText}>
@@ -154,19 +156,21 @@ const LeagueUserDetailsComponent: React.FunctionComponent<
               }
             />
           </div>
-          <div className={classes.actionButtonWrapper}>
-            <StandardButton
-              text="Edit Profile"
-              onClick={() => {
-                // playerSignals.editingplayer.value = playerData;
-              }}
-              height={
-                isMobile
-                  ? leagueLinkTheme.spacing(8)
-                  : leagueLinkTheme.spacing(12)
-              }
-            />
-          </div>
+          {auth.currentUser.uid === userId && (
+            <div className={classes.actionButtonWrapper}>
+              <StandardButton
+                text="Edit Profile"
+                onClick={() => {
+                  playerSignals.editingPlayer.value = playerData;
+                }}
+                height={
+                  isMobile
+                    ? leagueLinkTheme.spacing(8)
+                    : leagueLinkTheme.spacing(12)
+                }
+              />
+            </div>
+          )}
         </Grid>
       </Grid>
     </Grid>

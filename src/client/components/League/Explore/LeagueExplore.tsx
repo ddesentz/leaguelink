@@ -16,8 +16,6 @@ import useDetectKeyboardOpen from "use-detect-keyboard-open";
 import { useNavigate, useParams } from "react-router";
 import algoliasearch from "algoliasearch";
 import Parser from "html-react-parser";
-import { keyboard } from "@testing-library/user-event/dist/keyboard";
-import { leagueLinkTheme } from "../../../common/Theme";
 
 interface ILeagueExplore {}
 
@@ -34,7 +32,8 @@ const LeagueExploreComponent: React.FunctionComponent<ILeagueExplore> = () => {
     process.env.REACT_APP_ALGOLIA_APP_ID,
     process.env.REACT_APP_ALGOLIA_SEARCH_KEY
   );
-  const courseIndex = client.initIndex("teams");
+  const exploreIndex = client.initIndex("explore");
+  const playerIndex = client.initIndex("players");
 
   React.useEffect(() => {
     if (!viewMap) {
@@ -44,7 +43,7 @@ const LeagueExploreComponent: React.FunctionComponent<ILeagueExplore> = () => {
   }, [searchValue, viewMap]);
 
   const fetchPlayersAndTeams = async (searchTerm: string) => {
-    courseIndex.search(searchTerm).then(({ hits }) => {
+    exploreIndex.search(searchTerm).then(({ hits }) => {
       setSearchResults(hits);
     });
   };
@@ -61,6 +60,43 @@ const LeagueExploreComponent: React.FunctionComponent<ILeagueExplore> = () => {
       />
     </IconButton>
   );
+
+  const renderPlayerResult = (item: any) => {
+    const highlightText = item._highlightResult;
+    return (
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justifyContent="flex-start"
+        className={classes.teamRenderContainer}
+        onClick={() => navigate(`/${leagueId}/user/${item.objectID}`)}
+      >
+        <Avatar src={item.photoURL} className={classes.playerAvatar} />
+        <Grid
+          container
+          direction="column"
+          alignItems="flex-start"
+          justifyContent="center"
+          className={classes.teamTextContainer}
+        >
+          <Typography className={classes.teamNameText}>
+            {Parser(highlightText.displayName.value)}
+          </Typography>
+          {highlightText.pdgaNumber && (
+            <Typography className={classes.teamCourseText}>
+              <img
+                src={"/assets/icons/pdgaIcon.ico"}
+                alt=""
+                className={classes.pdgaIcon}
+              />
+              #{Parser(highlightText.pdgaNumber.value)}
+            </Typography>
+          )}
+        </Grid>
+      </Grid>
+    );
+  };
 
   const renderTeamResult = (item: any) => {
     const highlightText = item._highlightResult;
@@ -112,7 +148,7 @@ const LeagueExploreComponent: React.FunctionComponent<ILeagueExplore> = () => {
     const item = searchResults[index];
     return (
       <div key={index} style={style} className={classes.searchItemContainer}>
-        {renderTeamResult(item)}
+        {item.displayName ? renderPlayerResult(item) : renderTeamResult(item)}
       </div>
     );
   };

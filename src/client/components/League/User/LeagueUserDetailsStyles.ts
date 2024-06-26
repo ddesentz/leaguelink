@@ -109,7 +109,6 @@ export const leagueUserDetailsStyles = makeStyles()((theme: Theme) => ({
   actionButtonWrapper: {
     display: "flex",
     flex: 1,
-    maxWidth: "50%",
     minWidth: "fit-content",
     zIndex: 1,
     justifyContent: "center",

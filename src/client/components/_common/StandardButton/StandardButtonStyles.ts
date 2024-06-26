@@ -6,7 +6,7 @@ export const standardButtonStyles = makeStyles()((theme: Theme) => ({
     width: "100%",
     color: theme.palette.primary.contrastText,
     fontWeight: "bold",
-    position: "relative",
+    position: "sticky",
     overflow: "hidden",
     flexShrink: 0,
     borderRadius: theme.spacing(10),

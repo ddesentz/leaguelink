@@ -1,8 +1,9 @@
 import { client, functions } from "../index";
 
 const teamsIndex = client.initIndex("leagues/{leagueId}/teams");
+const playerIndex = client.initIndex("leagues/{leagueId}/players");
 
-exports.addToIndex = functions.firestore
+exports.addTeamToIndex = functions.firestore
   .document("leagues/{leagueId}/teams/{teamId}")
   .onCreate((snapshot: any) => {
     const data = snapshot.data();
@@ -10,7 +11,7 @@ exports.addToIndex = functions.firestore
     return teamsIndex.saveObject({ ...data, objectID });
   });
 
-exports.updateIndex = functions.firestore
+exports.updateTeamIndex = functions.firestore
   .document("leagues/{leagueId}/teams/{teamId}")
   .onUpdate((change: any) => {
     const newData = change.after.data();
@@ -18,6 +19,27 @@ exports.updateIndex = functions.firestore
     return teamsIndex.saveObject({ ...newData, objectID });
   });
 
-exports.deleteFromIndex = functions.firestore
+exports.deleteTeamFromIndex = functions.firestore
   .document("leagues/{leagueId}/teams/{teamId}")
   .onDelete((snapshot: any) => teamsIndex.deleteObject(snapshot.id));
+
+exports.addPlayerToIndex = functions.firestore
+  .document("leagues/{leagueId}/players/{playerId}")
+  .onCreate((snapshot: any) => {
+    const data = snapshot.data();
+    const objectID = snapshot.id;
+    return playerIndex.saveObject({ ...data, objectID });
+  });
+
+exports.updatePlayerIndex = functions.firestore
+  .document("leagues/{leagueId}/players/{playerId}")
+  .onUpdate((change: any) => {
+    const newData = change.after.data();
+    console.log(newData);
+    const objectID = change.after.id;
+    return playerIndex.saveObject({ ...newData, objectID });
+  });
+
+exports.deletePlayerFromIndex = functions.firestore
+  .document("leagues/{leagueId}/players/{playerId}")
+  .onDelete((snapshot: any) => playerIndex.deleteObject(snapshot.id));

@@ -43,7 +43,7 @@ const root = ReactDOM.createRoot(
 );
 
 export const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+export const auth = getAuth(app);
 auth.languageCode = "en";
 const functions = getFunctions(app);
 if (process.env.NODE_ENV === "development") {

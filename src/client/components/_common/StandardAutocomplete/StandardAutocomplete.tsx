@@ -27,7 +27,7 @@ interface IStandardAutocomplete {
   endIcon?: React.ReactNode;
   maxRendered?: number;
   itemSize?: number;
-  itemRenderer?: (item: IKeyValue, index: number) => JSX.Element;
+  itemRenderer?: (item: IKeyValue | string, index: number) => JSX.Element;
 }
 
 const StandardAutocompleteComponent: React.FunctionComponent<
@@ -196,7 +196,10 @@ const StandardAutocompleteComponent: React.FunctionComponent<
         </IconButton>
       )}
       <Paper
-        style={{ height: height, fontSize: `calc(${height} / 2.5)` }}
+        style={{
+          height: height,
+          fontSize: `calc(${height} / 2.5)`,
+        }}
         className={
           keyboardOpen && focused
             ? classes.keyboardAutocompleteContainer
@@ -235,7 +238,7 @@ const StandardAutocompleteComponent: React.FunctionComponent<
           value={value}
           onChange={handleOnChange}
           isOptionEqualToValue={(option, value) =>
-            itemRenderer ? option.key === value.key : option === value
+            option.key ? option.key === value.key : option === value
           }
           blurOnSelect
           className={classes.autocomplete}

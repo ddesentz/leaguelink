@@ -20,5 +20,11 @@ export const standardInputStyles = makeStyles()((theme: Theme) => ({
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
     fontSize: "inherit",
+    "& > input": {
+      "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
+        WebkitAppearance: "none",
+        margin: 0,
+      },
+    },
   },
 }));
